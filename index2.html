@@ -607,11 +607,11 @@
     <!-- ==================== JAVASCRIPT ==================== -->
     <script>
         const CONFIG = {
-            projectId: '69bed9e40025dfc91579',
-            endpoint: 'https://nyc.cloud.appwrite.io/v1',
-            databaseId: '69cc81de000602064878',
-            collections: { users: 'users_profile', messages: 'messages', groups: 'groups', groupMembers: 'group_members', friends: 'friends', blocked: 'blocked_users', counters: 'counters' }
-        };
+    projectId: '69d0d42100068cd0ec14',
+    endpoint: 'https://fra.cloud.appwrite.io/v1',
+    databaseId: '69d0d52b001be54a3e6a',
+    collections: { users: 'users_profile', messages: 'messages', groups: 'groups', groupMembers: 'group_members', friends: 'friends', blocked: 'blocked_users', counters: 'counters' }
+};
         const { Client, Account, Databases, Storage, Query, ID } = Appwrite;
         const client = new Client().setEndpoint(CONFIG.endpoint).setProject(CONFIG.projectId);
         const account = new Account(client);
