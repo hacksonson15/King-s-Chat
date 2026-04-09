@@ -11,7 +11,7 @@
         * {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
+            box-sizing: border-box; /* ✅ IMPORTANT: Yeh sabse zaroori hai */
         }
 
         :root {
@@ -25,34 +25,26 @@
             --text-secondary: #b4b4b4;
         }
 
-        /* ✅ FIX #1: Smooth Scrolling & Performance Base */
+        /* ✅ FIX #1: Body ko proper constrain karo */
         html {
-            overflow-x: hidden;
+            overflow-x: hidden; /* Horizontal scroll band karo */
             width: 100%;
             max-width: 100vw;
-            scroll-behavior: smooth; /* ✅ Native smooth scroll */
         }
 
         body {
             font-family: 'Poppins', sans-serif;
             background: var(--primary-galaxy);
             color: var(--text-primary);
-            overflow-x: hidden;
-            overflow-y: auto;
+            overflow-x: hidden; /* ✅ Double safety */
+            overflow-y: auto; /* Vertical scroll allow karo */
             position: relative;
             width: 100%;
             max-width: 100vw;
             min-height: 100vh;
-            
-            /* ✅ CRITICAL: GPU Acceleration for smooth scrolling */
-            -webkit-overflow-scrolling: touch; /* iOS momentum scroll */
-            will-change: transform; /* ✅ Hints browser to optimize */
-            transform: translateZ(0); /* ✅ Force GPU layer */
-            backface-visibility: hidden; /* ✅ Prevent flicker */
-            perspective: 1000px; /* ✅ 3D context for better rendering */
         }
 
-        /* Galaxy Background Animation - ✅ OPTIMIZED */
+        /* Galaxy Background Animation */
         .galaxy-bg {
             position: fixed;
             top: 0;
@@ -62,10 +54,6 @@
             z-index: -1;
             overflow: hidden;
             max-width: 100vw;
-            
-            /* ✅ Performance: Don't animate this container */
-            pointer-events: none;
-            contain: strict; /* ✅ Isolate from main thread */
         }
 
         .stars {
@@ -73,25 +61,18 @@
             width: 100%;
             height: 100%;
             background: transparent;
-            
-            /* ✅ Optimization hint */
-            will-change: opacity;
         }
 
         .star {
             position: absolute;
             background: white;
             border-radius: 50%;
-            
-            /* ✅ OPTIMIZATION: Use opacity-only animation (cheaper) */
             animation: twinkle var(--duration) ease-in-out infinite;
-            will-change: opacity, transform; /* ✅ GPU hint */
         }
 
         @keyframes twinkle {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 1; }
-            /* ✅ Removed transform scale - was causing layout thrashing */
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.5); }
         }
 
         .nebula {
@@ -99,25 +80,45 @@
             border-radius: 50%;
             filter: blur(80px);
             opacity: 0.3;
-            
-            /* ✅ SLOWER animation = less CPU usage */
-            animation: float 25s ease-in-out infinite; /* Increased from 20s */
-            will-change: transform, opacity; /* ✅ GPU hint */
+            animation: float 20s ease-in-out infinite;
         }
 
         @keyframes float {
-            0%, 100% { transform: translate(0, 0); }
-            33% { transform: translate(20px, -20px); } /* Reduced movement */
-            66% { transform: translate(-15px, 15px); } /* Reduced movement */
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -30px) rotate(120deg); }
+            66% { transform: translate(-20px, 20px) rotate(240deg); }
         }
 
         /* Theme System */
-        .theme-girls { --primary-color: #ff69b4; --secondary-color: #ff1493; --gradient-start: #ff69b4; --gradient-end: #ff1493; }
-        .theme-boys { --primary-color: #00bfff; --secondary-color: #1e90ff; --gradient-start: #00bfff; --gradient-end: #1e90ff; }
-        .theme-mobiles { --primary-color: #32cd32; --secondary-color: #228b22; --gradient-start: #32cd32; --gradient-end: #228b22; }
-        .theme-laptops { --primary-color: #ffd700; --secondary-color: #ffa500; --gradient-start: #ffd700; --gradient-end: #ffa500; }
+        .theme-girls {
+            --primary-color: #ff69b4;
+            --secondary-color: #ff1493;
+            --gradient-start: #ff69b4;
+            --gradient-end: #ff1493;
+        }
 
-        /* Loading Screen - ✅ Optimized */
+        .theme-boys {
+            --primary-color: #00bfff;
+            --secondary-color: #1e90ff;
+            --gradient-start: #00bfff;
+            --gradient-end: #1e90ff;
+        }
+
+        .theme-mobiles {
+            --primary-color: #32cd32;
+            --secondary-color: #228b22;
+            --gradient-start: #32cd32;
+            --gradient-end: #228b22;
+        }
+
+        .theme-laptops {
+            --primary-color: #ffd700;
+            --secondary-color: #ffa500;
+            --gradient-start: #ffd700;
+            --gradient-end: #ffa500;
+        }
+
+        /* Loading Screen */
         .loading-screen {
             position: fixed;
             top: 0;
@@ -131,22 +132,20 @@
             z-index: 9999;
             transition: opacity 0.5s ease, visibility 0.5s ease;
             max-width: 100vw;
-            will-change: opacity; /* ✅ GPU hint */
         }
 
         .loading-screen.hidden {
             opacity: 0;
             visibility: hidden;
-            pointer-events: none; /* ✅ Stop interaction when hidden */
         }
 
         .loader-container {
             text-align: center;
-            padding: 20px;
+            padding: 20px; /* ✅ Mobile safe */
         }
 
         .neon-circle {
-            width: 120px;
+            width: 120px; /* ✅ Reduced from 150px */
             height: 120px;
             border: 4px solid transparent;
             border-top: 4px solid var(--accent-neon);
@@ -159,23 +158,18 @@
             align-items: center;
             justify-content: center;
             position: relative;
-            
-            /* ✅ GPU optimization */
-            will-change: transform;
-            transform: translateZ(0);
         }
 
         .neon-circle::before {
             content: '';
             position: absolute;
-            width: 95px;
+            width: 95px; /* ✅ Scaled down */
             height: 95px;
             border: 3px solid transparent;
             border-bottom: 3px solid var(--accent-purple);
             border-left: 3px solid var(--accent-gold);
             border-radius: 50%;
             animation: spin 1.5s linear reverse infinite;
-            will-change: transform;
         }
 
         @keyframes spin {
@@ -184,7 +178,7 @@
         }
 
         .loading-percentage {
-            font-size: 20px;
+            font-size: 20px; /* ✅ Reduced */
             color: var(--accent-neon);
             font-weight: bold;
             margin-top: 10px;
@@ -194,19 +188,18 @@
         .loading-text {
             color: var(--text-secondary);
             margin-top: 5px;
-            font-size: 14px;
+            font-size: 14px; /* ✅ Added */
         }
 
-        /* Navigation - ✅ Fixed & Optimized */
+        /* Navigation - ✅ FULLY RESPONSIVE */
         .navbar {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
-            padding: 12px 4%;
+            padding: 12px 4%; /* ✅ Reduced padding */
             background: rgba(10, 10, 46, 0.95);
-            backdrop-filter: blur(8px); /* ✅ Reduced from 10px */
-            -webkit-backdrop-filter: blur(8px);
+            backdrop-filter: blur(10px);
             border-bottom: 1px solid rgba(0, 245, 255, 0.2);
             z-index: 1000;
             display: flex;
@@ -215,42 +208,33 @@
             box-shadow: 0 4px 30px rgba(0, 245, 255, 0.1);
             width: 100%;
             max-width: 100vw;
-            flex-wrap: wrap;
+            flex-wrap: wrap; /* ✅ Allow wrapping */
             gap: 10px;
-            
-            /* ✅ CRITICAL: Make navbar fixed position smooth */
-            transform: translateZ(0);
-            will-change: transform;
-            contain: layout style; /* ✅ Contain repaints */
         }
 
         .logo-container {
             display: flex;
             align-items: center;
-            gap: 12px;
-            flex-shrink: 0;
+            gap: 12px; /* ✅ Reduced */
+            flex-shrink: 0; /* ✅ Don't shrink */
         }
 
         .logo {
-            width: 45px;
+            width: 45px; /* ✅ Reduced from 60px */
             height: 45px;
             background: linear-gradient(135deg, var(--accent-neon), var(--accent-pink));
-            border-radius: 12px;
+            border-radius: 12px; /* ✅ Slightly smaller radius */
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 22px;
+            font-size: 22px; /* ✅ Reduced */
             font-weight: 900;
             color: white;
-            box-shadow: 0 0 20px rgba(0, 245, 255, 0.4); /* ✅ Reduced shadow */
-            animation: logoGlow 3s ease-in-out infinite alternate; /* ✅ Slower */
+            box-shadow: 0 0 25px rgba(0, 245, 255, 0.5);
+            animation: logoGlow 2s ease-in-out infinite alternate;
             position: relative;
             overflow: hidden;
             flex-shrink: 0;
-            
-            /* ✅ GPU optimization */
-            will-change: box-shadow, transform;
-            transform: translateZ(0);
         }
 
         .logo::before {
@@ -261,8 +245,7 @@
             width: 200%;
             height: 200%;
             background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            animation: shine 4s infinite; /* ✅ Slower from 3s */
-            will-change: transform;
+            animation: shine 3s infinite;
         }
 
         @keyframes shine {
@@ -271,28 +254,28 @@
         }
 
         @keyframes logoGlow {
-            from { box-shadow: 0 0 20px rgba(0, 245, 255, 0.4); }
-            to { box-shadow: 0 0 35px rgba(255, 0, 110, 0.6); }
+            from { box-shadow: 0 0 25px rgba(0, 245, 255, 0.5); }
+            to { box-shadow: 0 0 40px rgba(255, 0, 110, 0.7); }
         }
 
         .site-name {
             font-family: 'Orbitron', sans-serif;
-            font-size: 18px;
+            font-size: 18px; /* ✅ Reduced from 28px */
             font-weight: 900;
             background: linear-gradient(90deg, var(--accent-neon), var(--accent-pink), var(--accent-purple));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             text-shadow: 0 0 30px rgba(0, 245, 255, 0.5);
-            letter-spacing: 1px;
-            white-space: nowrap;
+            letter-spacing: 1px; /* ✅ Reduced */
+            white-space: nowrap; /* ✅ Prevent break */
         }
 
         .nav-links {
             display: flex;
-            gap: 8px;
+            gap: 8px; /* ✅ Reduced from 25px */
             align-items: center;
-            flex-wrap: wrap;
+            flex-wrap: wrap; /* ✅ Allow wrap on small screens */
             justify-content: flex-end;
         }
 
@@ -302,14 +285,11 @@
             font-weight: 500;
             transition: all 0.3s ease;
             cursor: pointer;
-            padding: 6px 10px;
+            padding: 6px 10px; /* ✅ Reduced padding */
             border-radius: 8px;
             position: relative;
-            font-size: 13px;
-            white-space: nowrap;
-            
-            /* ✅ Only animate transform on hover (GPU friendly) */
-            will-change: transform, color;
+            font-size: 13px; /* ✅ Added smaller font */
+            white-space: nowrap; /* ✅ Don't break links */
         }
 
         .nav-link:hover {
@@ -326,7 +306,7 @@
             width: 0;
             height: 2px;
             background: var(--accent-neon);
-            transition: width 0.3s ease;
+            transition: all 0.3s ease;
             transform: translateX(-50%);
         }
 
@@ -334,37 +314,31 @@
             width: 80%;
         }
 
-        /* Main Container - ✅ Scroll Optimization */
+        /* Main Container */
         .main-container {
             min-height: 100vh;
-            padding-top: 90px;
+            padding-top: 90px; /* ✅ Adjusted for smaller navbar */
             width: 100%;
             max-width: 100vw;
-            overflow-x: hidden;
-            
-            /* ✅ Contain paints for better scroll perf */
-            contain: paint;
+            overflow-x: hidden; /* ✅ Safety */
         }
 
-        /* Hero Section - ✅ Optimized */
+        /* Hero Section - ✅ MOBILE OPTIMIZED */
         .hero-section {
-            min-height: auto;
+            min-height: auto; /* ✅ Changed from 100vh */
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 30px 5%;
+            padding: 30px 5%; /* ✅ Reduced padding */
             text-align: center;
             position: relative;
             width: 100%;
             max-width: 100vw;
-            
-            /* ✅ Contain this section's paints */
-            contain: content;
         }
 
         .welcome-text {
-            font-size: clamp(24px, 6vw, 48px);
+            font-size: clamp(24px, 6vw, 48px); /* ✅ RESPONSIVE FONT SIZE */
             font-weight: 700;
             margin-bottom: 15px;
             background: linear-gradient(90deg, #fff, var(--accent-neon), var(--accent-pink));
@@ -373,20 +347,16 @@
             background-clip: text;
             animation: fadeInUp 1s ease;
             line-height: 1.3;
-            word-wrap: break-word;
-            
-            /* ✅ Text render optimization */
-            text-rendering: optimizeLegibility;
-            -webkit-font-smoothing: antialiased;
+            word-wrap: break-word; /* ✅ Allow long words to break */
         }
 
         .welcome-subtitle {
-            font-size: clamp(14px, 3.5vw, 22px);
+            font-size: clamp(14px, 3.5vw, 22px); /* ✅ Responsive */
             color: var(--text-secondary);
-            margin-bottom: 35px;
+            margin-bottom: 35px; /* ✅ Reduced */
             animation: fadeInUp 1s ease 0.2s both;
             line-height: 1.5;
-            padding: 0 10px;
+            padding: 0 10px; /* ✅ Safe padding */
         }
 
         @keyframes fadeInUp {
@@ -400,48 +370,44 @@
             }
         }
 
-        /* Auth Buttons - ✅ Stack on Mobile */
+        /* Auth Buttons - ✅ STACK ON MOBILE */
         .auth-buttons {
             display: flex;
             gap: 15px;
             margin-bottom: 40px;
-            flex-wrap: wrap;
+            flex-wrap: wrap; /* ✅ Stack vertically on mobile */
             justify-content: center;
             width: 100%;
-            max-width: 400px;
+            max-width: 400px; /* ✅ Constrain width */
             padding: 0 15px;
         }
 
         .btn-primary, .btn-secondary {
-            padding: 14px 30px;
-            font-size: 16px;
+            padding: 14px 30px; /* ✅ Reduced padding */
+            font-size: 16px; /* ✅ Smaller font */
             font-weight: 600;
             border: none;
             border-radius: 50px;
             cursor: pointer;
-            transition: all 0.3s ease; /* ✅ Faster transition */
+            transition: all 0.4s ease;
             position: relative;
             overflow: hidden;
             text-transform: uppercase;
             letter-spacing: 1px;
-            flex: 1 1 auto;
-            min-width: 140px;
-            white-space: nowrap;
-            
-            /* ✅ GPU accelerate button transforms */
-            will-change: transform, box-shadow;
-            transform: translateZ(0);
+            flex: 1 1 auto; /* ✅ Flexible buttons */
+            min-width: 140px; /* ✅ Minimum width */
+            white-space: nowrap; /* ✅ No text wrap */
         }
 
         .btn-primary {
             background: linear-gradient(135deg, var(--accent-neon), var(--accent-purple));
             color: white;
-            box-shadow: 0 8px 25px rgba(0, 245, 255, 0.35); /* ✅ Reduced shadow */
+            box-shadow: 0 10px 30px rgba(0, 245, 255, 0.4);
         }
 
         .btn-primary:hover {
-            transform: translateY(-4px) scale(1.03); /* ✅ Less movement */
-            box-shadow: 0 12px 35px rgba(0, 245, 255, 0.5);
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(0, 245, 255, 0.6);
         }
 
         .btn-secondary {
@@ -452,39 +418,34 @@
 
         .btn-secondary:hover {
             background: rgba(0, 245, 255, 0.1);
-            transform: translateY(-4px);
-            box-shadow: 0 8px 25px rgba(0, 245, 255, 0.25);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 245, 255, 0.3);
         }
 
-        /* Stats Section - ✅ Responsive Grid */
+        /* Stats Section - ✅ RESPONSIVE GRID */
         .stats-section {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* ✅ Better minmax */
             gap: 20px;
             width: 100%;
-            max-width: 1100px;
+            max-width: 1100px; /* ✅ Slightly reduced */
             margin: 40px auto;
-            padding: 0 15px;
+            padding: 0 15px; /* ✅ Safe padding */
         }
 
         .stat-box {
             background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(6px); /* ✅ Reduced from 10px */
-            -webkit-backdrop-filter: blur(6px);
+            backdrop-filter: blur(10px);
             border: 1px solid rgba(0, 245, 255, 0.2);
             border-radius: 20px;
-            padding: 25px 20px;
+            padding: 25px 20px; /* ✅ Reduced padding */
             text-align: center;
-            transition: all 0.3s ease; /* ✅ Faster */
+            transition: all 0.4s ease;
             position: relative;
             overflow: hidden;
             animation: bounceIn 1s ease both;
-            width: 100%;
-            min-width: 0;
-            
-            /* ✅ GPU hints */
-            will-change: transform;
-            transform: translateZ(0);
+            width: 100%; /* ✅ Full width of grid cell */
+            min-width: 0; /* ✅ Important for grid */
         }
 
         .stat-box:nth-child(1) { animation-delay: 0.1s; }
@@ -500,82 +461,75 @@
         }
 
         .stat-box:hover {
-            transform: translateY(-8px) rotateY(3deg); /* ✅ Less rotation */
+            transform: translateY(-10px) rotateY(5deg);
             border-color: var(--accent-pink);
-            box-shadow: 0 16px 32px rgba(255, 0, 110, 0.25); /* ✅ Reduced shadow */
+            box-shadow: 0 20px 40px rgba(255, 0, 110, 0.3);
         }
 
         .stat-icon {
-            font-size: 36px;
+            font-size: 36px; /* ✅ Reduced from 48px */
             margin-bottom: 12px;
             background: linear-gradient(135deg, var(--accent-neon), var(--accent-pink));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            animation: pulse 3s ease-in-out infinite; /* ✅ Slower from 2s */
+            animation: pulse 2s ease-in-out infinite;
         }
 
         @keyframes pulse {
             0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.15); } /* ✅ Less scaling */
+            50% { transform: scale(1.2); }
         }
 
         .stat-number {
-            font-size: clamp(28px, 5vw, 42px);
+            font-size: clamp(28px, 5vw, 42px); /* ✅ Responsive */
             font-weight: 900;
             color: var(--accent-neon);
             font-family: 'Orbitron', sans-serif;
-            text-shadow: 0 0 18px rgba(0, 245, 255, 0.45); /* ✅ Reduced */
+            text-shadow: 0 0 20px rgba(0, 245, 255, 0.5);
             margin-bottom: 8px;
         }
 
         .stat-label {
-            font-size: 13px;
+            font-size: 13px; /* ✅ Smaller */
             color: var(--text-secondary);
             text-transform: uppercase;
             letter-spacing: 1px;
         }
 
-        /* Chat Demo Section - ✅ Critical Fix Area */
+        /* Chat Demo Section - ✅ CRITICAL FIX FOR HORIZONTAL SCROLL */
         .chat-demo-section {
             width: 100%;
-            max-width: 450px;
+            max-width: 450px; /* ✅ CONSTRAINED WIDTH - This was causing the issue! */
             margin: 60px auto;
             padding: 0 15px;
-            overflow-x: visible;
-            
-            /* ✅ Contain this section */
-            contain: layout style paint;
+            overflow-x: visible; /* ✅ Allow internal animations */
         }
 
         .phone-mockup {
             background: linear-gradient(145deg, #1a1a3e, #0a0a2e);
-            border-radius: 30px;
-            padding: 15px;
+            border-radius: 30px; /* ✅ Slightly smaller */
+            padding: 15px; /* ✅ Reduced from 20px */
             box-shadow: 
                 0 0 0 4px rgba(0, 245, 255, 0.3),
-                0 22px 45px rgba(0, 0, 0, 0.45),
-                inset 0 0 22px rgba(0, 245, 255, 0.08); /* ✅ All reduced */
+                0 25px 50px rgba(0, 0, 0, 0.5),
+                inset 0 0 25px rgba(0, 245, 255, 0.1);
             position: relative;
-            animation: phoneFloat 5s ease-in-out infinite; /* ✅ Slower from 4s */
-            width: 100%;
-            max-width: 100%;
-            
-            /* ✅ GPU acceleration for float animation */
-            will-change: transform;
-            transform: translateZ(0);
+            animation: phoneFloat 4s ease-in-out infinite;
+            width: 100%; /* ✅ Full width of container */
+            max-width: 100%; /* ✅ Don't exceed parent */
         }
 
         @keyframes phoneFloat {
             0%, 100% { transform: translateY(0) rotateY(0deg); }
-            50% { transform: translateY(-12px) rotateY(2deg); } /* ✅ Much less movement */
+            50% { transform: translateY(-15px) rotateY(3deg); } /* ✅ Reduced movement */
         }
 
         .phone-screen {
             background: linear-gradient(180deg, #0f0f2d, #1a1a4e);
-            border-radius: 25px;
-            padding: 15px;
-            min-height: 350px;
+            border-radius: 25px; /* ✅ Smaller */
+            padding: 15px; /* ✅ Reduced */
+            min-height: 350px; /* ✅ Reduced from 450px */
             position: relative;
             overflow: hidden;
             width: 100%;
@@ -590,26 +544,23 @@
 
         .chat-header h3 {
             color: var(--accent-neon);
-            font-size: 16px;
+            font-size: 16px; /* ✅ Smaller */
         }
 
         .chat-messages {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 12px; /* ✅ Reduced gap */
         }
 
         .message {
-            max-width: 80%;
-            padding: 10px 14px;
-            border-radius: 16px;
-            animation: messageSlide 0.4s ease both; /* ✅ Faster */
+            max-width: 80%; /* ✅ Slightly wider */
+            padding: 10px 14px; /* ✅ Reduced padding */
+            border-radius: 16px; /* ✅ Smaller */
+            animation: messageSlide 0.5s ease both;
             position: relative;
-            word-wrap: break-word;
+            word-wrap: break-word; /* ✅ Break long words */
             overflow-wrap: break-word;
-            
-            /* ✅ GPU hint */
-            will-change: opacity, transform;
         }
 
         .message-boy {
@@ -627,7 +578,7 @@
         @keyframes messageSlide {
             from {
                 opacity: 0;
-                transform: translateX(-15px); /* ✅ Less distance */
+                transform: translateX(-20px);
             }
             to {
                 opacity: 1;
@@ -642,7 +593,7 @@
         @keyframes messageSlideRight {
             from {
                 opacity: 0;
-                transform: translateX(15px);
+                transform: translateX(20px);
             }
             to {
                 opacity: 1;
@@ -651,28 +602,25 @@
         }
 
         .sender-name {
-            font-size: 11px;
+            font-size: 11px; /* ✅ Smaller */
             opacity: 0.9;
             margin-bottom: 4px;
             font-weight: 600;
         }
 
-        /* Features Section - ✅ Optimized */
+        /* Features Section - ✅ RESPONSIVE */
         .features-section {
-            padding: 80px 5%;
+            padding: 80px 5%; /* ✅ Reduced */
             background: rgba(0, 0, 0, 0.3);
             width: 100%;
             max-width: 100vw;
-            
-            /* ✅ Contain paints */
-            contain: content;
         }
 
         .section-title {
             text-align: center;
-            font-size: clamp(26px, 5vw, 42px);
+            font-size: clamp(26px, 5vw, 42px); /* ✅ Responsive */
             font-weight: 700;
-            margin-bottom: 40px;
+            margin-bottom: 40px; /* ✅ Reduced */
             background: linear-gradient(90deg, var(--accent-neon), var(--accent-pink));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -682,7 +630,7 @@
 
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* ✅ Better minimum */
             gap: 25px;
             max-width: 1300px;
             margin: 0 auto;
@@ -692,21 +640,16 @@
 
         .feature-card {
             background: rgba(255, 255, 255, 0.04);
-            backdrop-filter: blur(6px); /* ✅ Reduced */
-            -webkit-backdrop-filter: blur(6px);
+            backdrop-filter: blur(10px);
             border: 1px solid rgba(0, 245, 255, 0.15);
             border-radius: 25px;
-            padding: 30px 25px;
+            padding: 30px 25px; /* ✅ Reduced */
             text-align: center;
-            transition: all 0.3s ease; /* ✅ Faster */
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
             overflow: hidden;
             width: 100%;
-            min-width: 0;
-            
-            /* ✅ GPU hints */
-            will-change: transform;
-            transform: translateZ(0);
+            min-width: 0; /* ✅ Grid safety */
         }
 
         .feature-card::before {
@@ -716,9 +659,8 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(0, 245, 255, 0.08), transparent);
+            background: linear-gradient(90deg, transparent, rgba(0, 245, 255, 0.1), transparent);
             transition: left 0.5s ease;
-            pointer-events: none; /* ✅ Prevent interaction issues */
         }
 
         .feature-card:hover::before {
@@ -726,34 +668,31 @@
         }
 
         .feature-card:hover {
-            transform: translateY(-12px) scale(1.01); /* ✅ Less movement */
+            transform: translateY(-15px) scale(1.02);
             border-color: var(--accent-pink);
-            box-shadow: 0 20px 40px rgba(255, 0, 110, 0.18); /* ✅ Reduced shadow */
+            box-shadow: 0 25px 50px rgba(255, 0, 110, 0.2);
         }
 
         .feature-icon {
-            width: 65px;
+            width: 65px; /* ✅ Reduced from 80px */
             height: 65px;
             background: linear-gradient(135deg, var(--accent-neon), var(--accent-purple));
             border-radius: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 30px;
+            font-size: 30px; /* ✅ Reduced */
             margin: 0 auto 20px;
-            animation: iconBounce 3s ease-in-out infinite; /* ✅ Slower from 2s */
-            
-            /* ✅ GPU hint */
-            will-change: transform;
+            animation: iconBounce 2s ease-in-out infinite;
         }
 
         @keyframes iconBounce {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-7px); } /* ✅ Less bounce */
+            50% { transform: translateY(-10px); }
         }
 
         .feature-title {
-            font-size: 20px;
+            font-size: 20px; /* ✅ Reduced */
             font-weight: 700;
             margin-bottom: 12px;
             color: var(--text-primary);
@@ -762,10 +701,10 @@
         .feature-description {
             color: var(--text-secondary);
             line-height: 1.6;
-            font-size: 14px;
+            font-size: 14px; /* ✅ Slightly smaller */
         }
 
-        /* Modal Styles - ✅ Mobile Safe & Performant */
+        /* Modal Styles - ✅ MOBILE SAFE */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -773,21 +712,16 @@
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(6px); /* ✅ Reduced from 8px */
-            -webkit-backdrop-filter: blur(6px);
+            backdrop-filter: blur(8px);
             display: none;
             justify-content: center;
             align-items: center;
             z-index: 2000;
             opacity: 0;
             transition: opacity 0.3s ease;
-            padding: 15px;
-            overflow-y: auto;
-            overflow-x: hidden;
-            
-            /* ✅ Critical: Isolate modal from page scroll */
-            contain: strict;
-            will-change: opacity;
+            padding: 15px; /* ✅ Safe padding - prevents edge touch */
+            overflow-y: auto; /* ✅ Allow vertical scroll if needed */
+            overflow-x: hidden; /* ✅ No horizontal */
         }
 
         .modal-overlay.active {
@@ -799,26 +733,22 @@
             background: linear-gradient(145deg, #1a1a4e, #0a0a2e);
             border: 2px solid rgba(0, 245, 255, 0.3);
             border-radius: 25px;
-            padding: 35px 25px;
+            padding: 35px 25px; /* ✅ Reduced from 50px */
             width: 100%;
-            max-width: 480px;
+            max-width: 480px; /* ✅ Max width constrained */
             position: relative;
-            box-shadow: 0 0 50px rgba(0, 245, 255, 0.25); /* ✅ Reduced */
-            animation: modalSlideIn 0.4s ease; /* ✅ Faster */
+            box-shadow: 0 0 60px rgba(0, 245, 255, 0.3);
+            animation: modalSlideIn 0.5s ease;
             max-height: 90vh;
-            overflow-y: auto;
-            overflow-x: hidden;
-            margin: auto;
-            
-            /* ✅ GPU acceleration */
-            will-change: transform, opacity;
-            transform: translateZ(0);
+            overflow-y: auto; /* ✅ Scroll if content is tall */
+            overflow-x: hidden; /* ✅ Never horizontal */
+            margin: auto; /* ✅ Center properly */
         }
 
         @keyframes modalSlideIn {
             from {
                 opacity: 0;
-                transform: translateY(-40px) scale(0.95); /* ✅ Less distance */
+                transform: translateY(-50px) scale(0.9);
             }
             to {
                 opacity: 1;
@@ -828,12 +758,12 @@
 
         .modal-close {
             position: absolute;
-            top: 15px;
+            top: 15px; /* ✅ Adjusted */
             right: 15px;
             background: none;
             border: none;
             color: var(--text-secondary);
-            font-size: 26px;
+            font-size: 26px; /* ✅ Slightly smaller */
             cursor: pointer;
             transition: all 0.3s ease;
             width: 36px;
@@ -843,9 +773,6 @@
             justify-content: center;
             border-radius: 50%;
             z-index: 10;
-            
-            /* ✅ GPU hint */
-            will-change: transform, color;
         }
 
         .modal-close:hover {
@@ -855,7 +782,7 @@
         }
 
         .modal-title {
-            font-size: clamp(22px, 5vw, 32px);
+            font-size: clamp(22px, 5vw, 32px); /* ✅ Responsive */
             font-weight: 700;
             text-align: center;
             margin-bottom: 25px;
@@ -863,10 +790,10 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            padding-right: 30px;
+            padding-right: 30px; /* ✅ Space for close button */
         }
 
-        /* Form Styles - ✅ Input Safety */
+        /* Form Styles - ✅ INPUT SAFETY */
         .form-group {
             margin-bottom: 20px;
             position: relative;
@@ -877,41 +804,38 @@
             margin-bottom: 6px;
             color: var(--text-secondary);
             font-weight: 500;
-            font-size: 13px;
+            font-size: 13px; /* ✅ Slightly smaller */
         }
 
         .form-input {
-            width: 100%;
-            max-width: 100%;
-            padding: 14px 16px;
+            width: 100%; /* ✅ Always full width */
+            max-width: 100%; /* ✅ Never exceed */
+            padding: 14px 16px; /* ✅ Slightly reduced */
             background: rgba(255, 255, 255, 0.05);
             border: 2px solid rgba(0, 245, 255, 0.2);
-            border-radius: 12px;
+            border-radius: 12px; /* ✅ Slightly smaller */
             color: var(--text-primary);
-            font-size: 15px;
-            transition: all 0.25s ease; /* ✅ Faster */
+            font-size: 15px; /* ✅ Readable size */
+            transition: all 0.3s ease;
             font-family: 'Poppins', sans-serif;
-            box-sizing: border-box;
-            
-            /* ✅ Input optimization */
-            will-change: border-color, box-shadow;
+            box-sizing: border-box; /* ✅ Critical for inputs */
         }
 
         .form-input:focus {
             outline: none;
             border-color: var(--accent-neon);
-            box-shadow: 0 0 16px rgba(0, 245, 255, 0.25); /* ✅ Reduced */
+            box-shadow: 0 0 20px rgba(0, 245, 255, 0.3);
             background: rgba(255, 255, 255, 0.08);
         }
 
         .form-input.error {
             border-color: #ff4444;
-            box-shadow: 0 0 16px rgba(255, 68, 68, 0.25);
+            box-shadow: 0 0 20px rgba(255, 68, 68, 0.3);
         }
 
         .form-input.success {
             border-color: #44ff44;
-            box-shadow: 0 0 16px rgba(68, 255, 68, 0.25);
+            box-shadow: 0 0 20px rgba(68, 255, 68, 0.3);
         }
 
         .error-message {
@@ -919,18 +843,18 @@
             font-size: 12px;
             margin-top: 5px;
             display: none;
-            word-wrap: break-word;
+            word-wrap: break-word; /* ✅ Break long error messages */
         }
 
         .error-message.show {
             display: block;
-            animation: shake 0.4s ease; /* ✅ Faster */
+            animation: shake 0.5s ease;
         }
 
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-8px); } /* ✅ Less shake */
-            75% { transform: translateX(8px); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
         }
 
         /* Password Strength Indicator */
@@ -946,7 +870,7 @@
         .strength-bar {
             height: 100%;
             width: 0;
-            transition: all 0.25s ease; /* ✅ Faster */
+            transition: all 0.3s ease;
             border-radius: 5px;
         }
 
@@ -976,7 +900,7 @@
             color: var(--text-secondary);
             cursor: pointer;
             font-size: 17px;
-            transition: color 0.25s ease;
+            transition: color 0.3s ease;
             padding: 5px;
         }
 
@@ -995,9 +919,9 @@
         }
 
         .captcha-display {
-            font-size: clamp(18px, 4vw, 28px);
+            font-size: clamp(18px, 4vw, 28px); /* ✅ Responsive */
             font-weight: 700;
-            letter-spacing: 6px;
+            letter-spacing: 6px; /* ✅ Slightly less spacing */
             color: var(--accent-neon);
             background: rgba(0, 0, 0, 0.3);
             padding: 12px;
@@ -1007,7 +931,7 @@
             font-family: 'Courier New', monospace;
             text-decoration: line-through;
             text-decoration-color: rgba(255, 0, 110, 0.5);
-            word-break: break-all;
+            word-break: break-all; /* ✅ Safety */
         }
 
         .refresh-captcha {
@@ -1040,7 +964,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.25s ease;
+            transition: all 0.3s ease;
             flex-shrink: 0;
             margin-top: 2px;
         }
@@ -1059,10 +983,10 @@
 
         .checkbox-label {
             color: var(--text-secondary);
-            font-size: 13px;
+            font-size: 13px; /* ✅ Slightly smaller */
             line-height: 1.5;
             cursor: pointer;
-            word-wrap: break-word;
+            word-wrap: break-word; /* ✅ Safety */
         }
 
         .checkbox-label a {
@@ -1085,20 +1009,16 @@
             font-size: 16px;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.4s ease;
             position: relative;
             overflow: hidden;
             text-transform: uppercase;
             letter-spacing: 2px;
-            
-            /* ✅ GPU hint */
-            will-change: transform, box-shadow;
-            transform: translateZ(0);
         }
 
         .submit-btn:hover:not(:disabled) {
             transform: translateY(-3px);
-            box-shadow: 0 12px 35px rgba(0, 245, 255, 0.35);
+            box-shadow: 0 15px 40px rgba(0, 245, 255, 0.4);
         }
 
         .submit-btn:disabled {
@@ -1142,7 +1062,7 @@
             text-decoration: none;
             font-weight: 600;
             cursor: pointer;
-            transition: color 0.25s ease;
+            transition: color 0.3s ease;
         }
 
         .form-link a:hover {
@@ -1160,7 +1080,7 @@
             text-decoration: none;
             font-size: 13px;
             cursor: pointer;
-            transition: all 0.25s ease;
+            transition: all 0.3s ease;
         }
 
         .forgot-password a:hover {
@@ -1175,8 +1095,8 @@
             display: none;
             align-items: center;
             gap: 10px;
-            animation: slideDown 0.25s ease; /* ✅ Faster */
-            font-size: 13px;
+            animation: slideDown 0.3s ease;
+            font-size: 13px; /* ✅ Slightly smaller */
             word-wrap: break-word;
         }
 
@@ -1205,7 +1125,7 @@
         @keyframes slideDown {
             from {
                 opacity: 0;
-                transform: translateY(-8px); /* ✅ Less distance */
+                transform: translateY(-10px);
             }
             to {
                 opacity: 1;
@@ -1226,17 +1146,17 @@
 
         .lock-timer.show {
             display: block;
-            animation: pulse 1.5s ease-in-out infinite; /* ✅ Slower */
+            animation: pulse 1s ease-in-out infinite;
         }
 
         .timer-countdown {
-            font-size: 30px;
+            font-size: 30px; /* ✅ Slightly smaller */
             font-weight: 900;
             color: #ff4444;
             font-family: 'Orbitron', monospace;
         }
 
-        /* Footer - ✅ Responsive & Optimized */
+        /* Footer - ✅ RESPONSIVE */
         .footer {
             background: rgba(0, 0, 0, 0.5);
             padding: 35px 5%;
@@ -1244,9 +1164,6 @@
             border-top: 1px solid rgba(0, 245, 255, 0.1);
             width: 100%;
             max-width: 100vw;
-            
-            /* ✅ Contain footer paints */
-            contain: content;
         }
 
         .footer-content {
@@ -1258,18 +1175,18 @@
         .footer-links {
             display: flex;
             justify-content: center;
-            gap: 20px;
+            gap: 20px; /* ✅ Reduced */
             margin-bottom: 18px;
-            flex-wrap: wrap;
+            flex-wrap: wrap; /* ✅ Wrap on mobile */
         }
 
         .footer-link {
             color: var(--text-secondary);
             text-decoration: none;
-            transition: color 0.25s ease;
+            transition: color 0.3s ease;
             cursor: pointer;
-            font-size: 13px;
-            white-space: nowrap;
+            font-size: 13px; /* ✅ Smaller */
+            white-space: nowrap; /* ✅ Don't break link text */
         }
 
         .footer-link:hover {
@@ -1305,7 +1222,7 @@
 
         /* ==================== RESPONSIVE BREAKPOINTS ==================== */
 
-        /* Tablet */
+        /* ✅ TABLET (max-width: 768px) */
         @media (max-width: 768px) {
             .navbar {
                 padding: 10px 3%;
@@ -1367,14 +1284,14 @@
             }
 
             .features-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: 1fr; /* ✅ Single column on tablet/mobile */
                 gap: 20px;
             }
 
             .modal-content {
                 padding: 25px 18px;
                 margin: 10px;
-                max-width: 95vw;
+                max-width: 95vw; /* ✅ Use viewport width */
                 border-radius: 20px;
             }
 
@@ -1393,8 +1310,12 @@
             }
         }
 
-        /* Mobile Small */
+        /* ✅ MOBILE SMALL (max-width: 480px) */
         @media (max-width: 480px) {
+            :root {
+                /* Reduce font sizes further for very small screens */
+            }
+
             .navbar {
                 padding: 8px 3%;
             }
@@ -1418,6 +1339,11 @@
             .nav-link {
                 padding: 4px 6px;
                 font-size: 10px;
+            }
+
+            /* Hide some nav links on very small screens if needed */
+            .nav-link:nth-child(n+4) {
+                /* Optional: hide less important links */
             }
 
             .main-container {
@@ -1446,7 +1372,7 @@
             }
 
             .stats-section {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: repeat(2, 1fr); /* ✅ Force 2 columns */
                 gap: 12px;
                 padding: 0 8px;
             }
@@ -1625,7 +1551,7 @@
             }
         }
 
-        /* Very Small Screens */
+        /* ✅ VERY SMALL SCREENS (max-width: 360px) */
         @media (max-width: 360px) {
             .site-name {
                 font-size: 14px;
@@ -1636,7 +1562,7 @@
             }
 
             .stats-section {
-                grid-template-columns: 1fr;
+                grid-template-columns: 1fr; /* ✅ Single column */
                 gap: 10px;
             }
 
@@ -1649,13 +1575,13 @@
             }
 
             .nav-links {
-                display: none;
+                display: none; /* ✅ Hide nav links, show hamburger menu instead (optional) */
             }
         }
 
         /* Scrollbar Styling */
         ::-webkit-scrollbar {
-            width: 6px;
+            width: 6px; /* ✅ Thinner scrollbar */
         }
 
         ::-webkit-scrollbar-track {
@@ -1676,18 +1602,15 @@
             background: linear-gradient(145deg, #1a1a4e, #0a0a2e);
             border: 3px solid #44ff44;
             border-radius: 25px;
-            padding: 40px 30px;
+            padding: 40px 30px; /* ✅ Responsive padding */
             text-align: center;
             z-index: 3000;
             opacity: 0;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* ✅ Faster */
-            box-shadow: 0 0 60px rgba(68, 255, 68, 0.4); /* ✅ Reduced */
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 0 80px rgba(68, 255, 68, 0.5);
             width: 90%;
-            max-width: 350px;
+            max-width: 350px; /* ✅ Constrain width */
             margin: 0 auto;
-            
-            /* ✅ GPU hint */
-            will-change: transform, opacity;
         }
 
         .success-popup.show {
@@ -1696,15 +1619,15 @@
         }
 
         .success-icon {
-            font-size: 65px;
+            font-size: 65px; /* ✅ Slightly smaller */
             color: #44ff44;
             margin-bottom: 16px;
-            animation: successBounce 0.5s ease; /* ✅ Faster */
+            animation: successBounce 0.6s ease;
         }
 
         @keyframes successBounce {
             0% { transform: scale(0); }
-            50% { transform: scale(1.25); }
+            50% { transform: scale(1.3); }
             100% { transform: scale(1); }
         }
 
@@ -1719,7 +1642,7 @@
             font-size: 14px;
         }
 
-        /* Particle Effect - ✅ HEAVILY OPTIMIZED */
+        /* Particle Effect */
         .particles {
             position: fixed;
             top: 0;
@@ -1729,22 +1652,16 @@
             pointer-events: none;
             z-index: -1;
             overflow: hidden;
-            
-            /* ✅ Don't affect main thread */
-            contain: strict;
         }
 
         .particle {
             position: absolute;
-            width: 2px; /* ✅ Smaller from 3px */
-            height: 2px;
+            width: 3px; /* ✅ Slightly smaller */
+            height: 3px;
             background: var(--accent-neon);
             border-radius: 50%;
-            animation: particleFloat 20s infinite linear; /* ✅ Slower from 15s */
-            opacity: 0.5; /* ✅ Slightly less opaque */
-            
-            /* ✅ GPU acceleration for particles */
-            will-change: transform, opacity;
+            animation: particleFloat 15s infinite linear;
+            opacity: 0.6;
         }
 
         @keyframes particleFloat {
@@ -1753,10 +1670,10 @@
                 opacity: 0;
             }
             10% {
-                opacity: 0.5;
+                opacity: 0.6;
             }
             90% {
-                opacity: 0.5;
+                opacity: 0.6;
             }
             100% {
                 transform: translateY(-100vh) rotate(720deg);
@@ -1764,28 +1681,25 @@
             }
         }
 
-        /* Glow Effects - ✅ REDUCED IMPACT */
+        /* Glow Effects - ✅ REDUCED SIZE */
         .glow-corner {
             position: absolute;
-            width: 80px; /* ✅ Smaller from 100px */
-            height: 80px;
+            width: 100px; /* ✅ Reduced from 150px */
+            height: 100px;
             border-radius: 50%;
-            filter: blur(40px); /* ✅ Less blur from 50px */
-            opacity: 0.25; /* ✅ Less opaque from 0.3 */
-            animation: cornerGlow 10s ease-in-out infinite alternate; /* ✅ Slower from 8s */
-            
-            /* ✅ GPU hint */
-            will-change: transform, opacity;
+            filter: blur(50px); /* ✅ Less blur */
+            opacity: 0.3; /* ✅ Slightly less opaque */
+            animation: cornerGlow 8s ease-in-out infinite alternate;
         }
 
-        .corner-tl { top: -25px; left: -25px; background: var(--accent-neon); }
-        .corner-tr { top: -25px; right: -25px; background: var(--accent-pink); animation-delay: 2s; }
-        .corner-bl { bottom: -25px; left: -25px; background: var(--accent-purple); animation-delay: 4s; }
-        .corner-br { bottom: -25px; right: -25px; background: var(--accent-gold); animation-delay: 6s; }
+        .corner-tl { top: -30px; left: -30px; background: var(--accent-neon); }
+        .corner-tr { top: -30px; right: -30px; background: var(--accent-pink); animation-delay: 2s; }
+        .corner-bl { bottom: -30px; left: -30px; background: var(--accent-purple); animation-delay: 4s; }
+        .corner-br { bottom: -30px; right: -30px; background: var(--accent-gold); animation-delay: 6s; }
 
         @keyframes cornerGlow {
             0% { transform: scale(1) translate(0, 0); }
-            100% { transform: scale(1.2) translate(10px, 10px); } /* ✅ Less movement */
+            100% { transform: scale(1.3) translate(15px, 15px); } /* ✅ Less movement */
         }
 
         /* VPN Warning */
@@ -1814,12 +1728,12 @@
 
         .code-verification.show {
             display: block;
-            animation: slideDown 0.25s ease;
+            animation: slideDown 0.3s ease;
         }
 
         .code-input {
             text-align: center;
-            font-size: 20px;
+            font-size: 20px; /* ✅ Slightly smaller */
             letter-spacing: 8px;
             font-family: 'Orbitron', monospace;
         }
@@ -1850,7 +1764,7 @@
         <div class="nebula" style="width: 300px; height: 300px; background: radial-gradient(circle, rgba(255,0,110,0.3), transparent); bottom: 20%; left: 40%;"></div>
     </div>
 
-    <!-- Particles - ✅ REDUCED COUNT -->
+    <!-- Particles -->
     <div class="particles" id="particles"></div>
 
     <!-- Glow Corners -->
@@ -2308,154 +2222,293 @@
     </audio>
     
     <script>
-        // ==================== SOUND SYSTEM - ✅ OPTIMIZED ====================
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        let audioCtx;
+        // ==================== 🔊 ADVANCED SOUND SYSTEM ====================
+const AudioContext = window.AudioContext || window.webkitAudioContext;
+let audioCtx = null;
+let isAudioInitialized = false;
 
-        function initAudio() {
-            if (!audioCtx) {
-                audioCtx = new AudioContext();
-            }
-        }
-
-        function playSound(type) {
-            try {
-                initAudio();
-                const oscillator = audioCtx.createOscillator();
-                const gainNode = audioCtx.createGain();
-                
-                oscillator.connect(gainNode);
-                gainNode.connect(audioCtx.destination);
-
-                switch(type) {
-                    case 'click':
-                        oscillator.frequency.setValueAtTime(800, audioCtx.currentTime);
-                        oscillator.type = 'sine';
-                        gainNode.gain.setValueAtTime(0.08, audioCtx.currentTime); /* ✅ Reduced volume slightly */
-                        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
-                        oscillator.start(audioCtx.currentTime);
-                        oscillator.stop(audioCtx.currentTime + 0.1);
-                        break;
-                    case 'success':
-                        oscillator.frequency.setValueAtTime(523, audioCtx.currentTime);
-                        oscillator.frequency.setValueAtTime(659, audioCtx.currentTime + 0.1);
-                        oscillator.frequency.setValueAtTime(784, audioCtx.currentTime + 0.2);
-                        oscillator.type = 'sine';
-                        gainNode.gain.setValueAtTime(0.12, audioCtx.currentTime);
-                        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
-                        oscillator.start(audioCtx.currentTime);
-                        oscillator.stop(audioCtx.currentTime + 0.4);
-                        break;
-                    case 'error':
-                        oscillator.frequency.setValueAtTime(300, audioCtx.currentTime);
-                        oscillator.frequency.setValueAtTime(250, audioCtx.currentTime + 0.1);
-                        oscillator.type = 'sawtooth';
-                        gainNode.gain.setValueAtTime(0.07, audioCtx.currentTime);
-                        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
-                        oscillator.start(audioCtx.currentTime);
-                        oscillator.stop(audioCtx.currentTime + 0.3);
-                        break;
-                    case 'typing':
-                        oscillator.frequency.setValueAtTime(600 + Math.random() * 200, audioCtx.currentTime);
-                        oscillator.type = 'sine';
-                        gainNode.gain.setValueAtTime(0.02, audioCtx.currentTime); /* ✅ Lower volume */
-                        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.04); /* ✅ Shorter duration */
-                        oscillator.start(audioCtx.currentTime);
-                        oscillator.stop(audioCtx.currentTime + 0.04);
-                        break;
-                    case 'hover':
-                        oscillator.frequency.setValueAtTime(1000, audioCtx.currentTime);
-                        oscillator.type = 'sine';
-                        gainNode.gain.setValueAtTime(0.03, audioCtx.currentTime); /* ✅ Very quiet */
-                        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.06);
-                        oscillator.start(audioCtx.currentTime);
-                        oscillator.stop(audioCtx.currentTime + 0.06);
-                        break;
-                    case 'open':
-                        oscillator.frequency.setValueAtTime(400, audioCtx.currentTime);
-                        oscillator.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.12); /* ✅ Faster */
-                        oscillator.type = 'sine';
-                        gainNode.gain.setValueAtTime(0.09, audioCtx.currentTime);
-                        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
-                        oscillator.start(audioCtx.currentTime);
-                        oscillator.stop(audioCtx.currentTime + 0.15);
-                        break;
-                    case 'close':
-                        oscillator.frequency.setValueAtTime(800, audioCtx.currentTime);
-                        oscillator.frequency.exponentialRampToValueAtTime(400, audioCtx.currentTime + 0.12);
-                        oscillator.type = 'sine';
-                        gainNode.gain.setValueAtTime(0.09, audioCtx.currentTime);
-                        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
-                        oscillator.start(audioCtx.currentTime);
-                        oscillator.stop(audioCtx.currentTime + 0.15);
-                        break;
-                    case 'notification':
-                        const notes = [523, 659, 784, 1046];
-                        notes.forEach((freq, i) => {
-                            const osc = audioCtx.createOscillator();
-                            const gain = audioCtx.createGain();
-                            osc.connect(gain);
-                            gain.connect(audioCtx.destination);
-                            osc.frequency.setValueAtTime(freq, audioCtx.currentTime + i * 0.1);
-                            osc.type = 'sine';
-                            gain.gain.setValueAtTime(0.08, audioCtx.currentTime + i * 0.1);
-                            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + i * 0.1 + 0.18);
-                            osc.start(audioCtx.currentTime + i * 0.1);
-                            osc.stop(audioCtx.currentTime + i * 0.1 + 0.18);
-                        });
-                        return;
-                    case 'send':
-                        oscillator.frequency.setValueAtTime(700, audioCtx.currentTime);
-                        oscillator.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.08); /* ✅ Faster */
-                        oscillator.type = 'sine';
-                        gainNode.gain.setValueAtTime(0.08, audioCtx.currentTime);
-                        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.12);
-                        oscillator.start(audioCtx.currentTime);
-                        oscillator.stop(audioCtx.currentTime + 0.12);
-                        break;
-                    case 'load':
-                        oscillator.frequency.setValueAtTime(440, audioCtx.currentTime);
-                        oscillator.type = 'triangle';
-                        gainNode.gain.setValueAtTime(0.06, audioCtx.currentTime); /* ✅ Quieter */
-                        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
-                        oscillator.start(audioCtx.currentTime);
-                        oscillator.stop(audioCtx.currentTime + 0.08);
-                        break;
-                }
-            } catch(e) {
-                console.log('Audio not supported');
-            }
-        }
-
-        // ✅ THROTTLED EVENT LISTENERS - Prevent excessive calls during scroll
-        let lastHoverTime = 0;
-        let lastTypeTime = 0;
-        
-        document.addEventListener('DOMContentLoaded', () => {
-            document.body.addEventListener('click', initAudio, { once: true });
+// Audio initialize karne ka function
+function initAudio() {
+    try {
+        if (!audioCtx) {
+            audioCtx = new AudioContext();
             
-            // ✅ THROTTLE HOVER SOUNDS (prevent sound spam during fast scroll)
-            document.querySelectorAll('.btn-primary, .btn-secondary, .nav-link, .feature-card, .stat-box').forEach(el => {
-                el.addEventListener('mouseenter', () => {
-                    const now = Date.now();
-                    if (now - lastHoverTime > 150) { /* ✅ 150ms throttle */
-                        playSound('hover');
-                        lastHoverTime = now;
-                    }
-                });
-            });
+            // Resume agar suspended ho
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+        isAudioInitialized = true;
+        return true;
+    } catch(e) {
+        console.log('🔇 Audio not supported:', e.message);
+        return false;
+    }
+}
 
-            // ✅ THROTTLE TYPING SOUNDS
-            document.querySelectorAll('.form-input').forEach(input => {
-                input.addEventListener('keypress', () => {
-                    const now = Date.now();
-                    if (now - lastTypeTime > 80) { /* ✅ 80ms throttle */
-                        playSound('typing');
-                        lastTypeTime = now;
-                    }
-                });
-            });
+// Master Sound Function - Sab sounds yahan se handle honge
+function playSound(type) {
+    try {
+        // Pehle check karo ki audio ready hai ya nahi
+        if (!initAudio()) return;
+        
+        // Audio context resume karo agar suspend ho
+        if (audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
+
+        const oscillator = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+
+        // Har sound ki alag settings
+        switch(type) {
+            
+            // ✅ CLICK SOUND - Button click pe (Waise hi rahega)
+            case 'click':
+                oscillator.frequency.setValueAtTime(800, audioCtx.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(600, audioCtx.currentTime + 0.05);
+                oscillator.type = 'sine';
+                gainNode.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
+                oscillator.start(audioCtx.currentTime);
+                oscillator.stop(audioCtx.currentTime + 0.1);
+                break;
+
+            // ✅ SUCCESS SOUND - Login/Signup successful
+            case 'success':
+                playMelody([523, 659, 784, 1046], 0.15, 0.2, 'sine');
+                return; // Melody function use hoga
+
+            // ✅ ERROR SOUND - Galat input ya error
+            case 'error':
+                oscillator.frequency.setValueAtTime(300, audioCtx.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 0.15);
+                oscillator.type = 'sawtooth';
+                gainNode.gain.setValueAtTime(0.12, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.25);
+                oscillator.start(audioCtx.currentTime);
+                oscillator.stop(audioCtx.currentTime + 0.25);
+                break;
+
+            // ✅ TYPING SOUND - Input field mein type karte waqt
+            case 'typing':
+                oscillator.frequency.setValueAtTime(600 + Math.random() * 300, audioCtx.currentTime);
+                oscillator.type = 'sine';
+                gainNode.gain.setValueAtTime(0.04, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.06);
+                oscillator.start(audioCtx.currentTime);
+                oscillator.stop(audioCtx.currentTime + 0.06);
+                break;
+
+            // ✅ HOVER SOUND - Mouse hover pe (soft sound)
+            case 'hover':
+                oscillator.frequency.setValueAtTime(1200, audioCtx.currentTime);
+                oscillator.type = 'sine';
+                gainNode.gain.setValueAtTime(0.03, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.06);
+                oscillator.start(audioCtx.currentTime);
+                oscillator.stop(audioCtx.currentTime + 0.06);
+                break;
+
+            // ✅ MODAL OPEN SOUND - Modal khulte waqt
+            case 'open':
+                oscillator.frequency.setValueAtTime(400, audioCtx.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(900, audioCtx.currentTime + 0.12);
+                oscillator.type = 'sine';
+                gainNode.gain.setValueAtTime(0.14, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.18);
+                oscillator.start(audioCtx.currentTime);
+                oscillator.stop(audioCtx.currentTime + 0.18);
+                break;
+
+            // ✅ MODAL CLOSE SOUND - Modal band hone pe
+            case 'close':
+                oscillator.frequency.setValueAtTime(900, audioCtx.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(400, audioCtx.currentTime + 0.12);
+                oscillator.type = 'sine';
+                gainNode.gain.setValueAtTime(0.14, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.18);
+                oscillator.start(audioCtx.currentTime);
+                oscillator.stop(audioCtx.currentTime + 0.18);
+                break;
+
+            // ✅ NOTIFICATION SOUND - Alert/notification
+            case 'notification':
+                playMelody([523, 659, 784, 1046, 1318], 0.12, 0.15, 'sine');
+                return;
+
+            // ✅ MESSAGE SEND SOUND - Chat message bhejne pe
+            case 'send':
+                oscillator.frequency.setValueAtTime(700, audioCtx.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(1100, audioCtx.currentTime + 0.08);
+                oscillator.type = 'sine';
+                gainNode.gain.setValueAtTime(0.12, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.12);
+                oscillator.start(audioCtx.currentTime);
+                oscillator.stop(audioCtx.currentTime + 0.12);
+                break;
+
+            // ✅ LOADING SOUND - Loading screen pe
+            case 'load':
+                oscillator.frequency.setValueAtTime(500, audioCtx.currentTime);
+                oscillator.type = 'triangle';
+                gainNode.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
+                oscillator.start(audioCtx.currentTime);
+                oscillator.stop(audioCtx.currentTime + 0.08);
+                break;
+
+            // ✅ POPUP SOUND - Success popup
+            case 'popup':
+                playMelody[784, 988, 1175], 0.18, 0.2, 'sine');
+                return;
+
+            default:
+                // Default click sound
+                oscillator.frequency.setValueAtTime(800, audioCtx.currentTime);
+                oscillator.type = 'sine';
+                gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
+                oscillator.start(audioCtx.currentTime);
+                oscillator.stop(audioCtx.currentTime + 0.08);
+        }
+        
+    } catch(e) {
+        console.log('⚠️ Sound Error:', e.message);
+    }
+}
+
+// 🎵 Melody Function - Multiple notes ek saath play karne ke liye
+function playMelody(notes, volume, gap, waveType = 'sine') {
+    try {
+        if (!audioCtx) return;
+        
+        notes.forEach((freq, i) => {
+            setTimeout(() => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                osc.type = waveType;
+                
+                gain.gain.setValueAtTime(volume, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.25);
+                
+                osc.start(audioCtx.currentTime);
+                osc.stop(audioCtx.currentTime + 0.25);
+            }, i * (gap * 1000)); // Gap in milliseconds
         });
+    } catch(e) {
+        console.log('Melody error:', e);
+    }
+}
+
+// ==================== 🎯 EVENT LISTENERS SETUP ====================
+document.addEventListener('DOMContentLoaded', () => {
+    
+    // Pehli click pe audio initialize (Browser restriction ke liye)
+    document.addEventListener('click', function initOnClick() {
+        initAudio();
+        document.removeEventListener('click', initOnClick); // Ek baar hi chalega
+    }, { once: true });
+
+    // Keyboard se bhi initialize ho jaye
+    document.addEventListener('keydown', function initOnKey() {
+        initAudio();
+        document.removeEventListener('keydown', initOnKey);
+    }, { once: true });
+
+    // Mouse move pe bhi try karo (optional)
+    document.addEventListener('mousemove', function initOnMove() {
+        if (!isAudioInitialized) {
+            initAudio();
+        }
+        document.removeEventListener('mousemove', initOnMove);
+    }, { once: true });
+
+    // ✅ Hover Sounds - Buttons aur links pe
+    const hoverElements = document.querySelectorAll('.btn-primary, .btn-secondary, .nav-link, .feature-card, .stat-box, .logo');
+    hoverElements.forEach(el => {
+        el.addEventListener('mouseenter', () => {
+            playSound('hover');
+        }, { passive: true }); // Performance improve
+    });
+
+    // ✅ Typing Sounds - Input fields mein
+    const inputFields = document.querySelectorAll('.form-input, .code-input');
+    inputFields.forEach(input => {
+        let lastKeyTime = 0;
+        input.addEventListener('keydown', (e) => {
+            // Sirf character keys pe sound (arrow keys nahi)
+            if (e.key.length === 1 || e.key === 'Backspace' || e.key === 'Delete') {
+                const now = Date.now();
+                // Thoda delay taaki rapid typing mein noise na ho
+                if (now - lastKeyTime > 50) {
+                    playSound('typing');
+                    lastKeyTime = now;
+                }
+            }
+        });
+    });
+
+    // ✅ Click Sounds - Sab clickable elements pe auto-attach
+    const clickableElements = document.querySelectorAll('button, .nav-link, .footer-link, .modal-close, .refresh-captcha, .custom-checkbox, .checkbox-label');
+    clickableElements.forEach(el => {
+        el.addEventListener('click', () => {
+            playSound('click');
+        });
+    });
+
+    console.log('✅ Sound System Loaded Successfully!');
+    console.log('🔊 Available sounds: click, success, error, typing, hover, open, close, notification, send, load, popup');
+});
+
+// ==================== 🛠️ UTILITY FUNCTIONS ====================
+
+// Sound test karne ka function (console mein chalao: testAllSounds())
+function testAllSounds() {
+    const sounds = ['click', 'success', 'error', 'typing', 'hover', 'open', 'close', 'notification', 'send', 'load'];
+    let index = 0;
+    
+    console.log('🎵 Testing all sounds...');
+    
+    const interval = setInterval(() => {
+        if (index < sounds.length) {
+            console.log(`▶️ Playing: ${sounds[index]}`);
+            playSound(sounds[index]);
+            index++;
+        } else {
+            clearInterval(interval);
+            console.log('✅ Sound test complete!');
+        }
+    }, 800);
+}
+
+// Volume control (optional - future use)
+function setMasterVolume(level) {
+    if (audioCtx && audioCtx.masterGain) {
+        audioCtx.masterGain.gain.setValueAtTime(Math.max(0, Math.min(1, level)), audioCtx.currentTime);
+    }
+}
+
+// Mute/Unmute
+function toggleMute() {
+    if (audioCtx) {
+        if (audioCtx.state === 'running') {
+            audioCtx.suspend();
+            console.log('🔇 Muted');
+        } else {
+            audioCtx.resume();
+            console.log('🔊 Unmuted');
+        }
+    }
+}
 
         // ==================== LOADING SCREEN ====================
         let loadingProgress = 0;
@@ -2467,45 +2520,40 @@
                 loadingProgress += Math.random() * 3 + 1;
                 if (loadingProgress > 100) loadingProgress = 100;
                 loadingPercentage.textContent = Math.floor(loadingProgress) + '%';
-                
-                /* ✅ THROTTLE LOAD SOUND */
-                if (Math.random() > 0.5) playSound('load');
-                
-                setTimeout(simulateLoading, 60 + Math.random() * 100); /* ✅ Slightly slower updates */
+                playSound('load');
+                setTimeout(simulateLoading, 50 + Math.random() * 100);
             } else {
                 setTimeout(() => {
                     loadingScreen.classList.add('hidden');
                     playSound('success');
                     initializeApp();
-                }, 400);
+                }, 500);
             }
         }
 
-        // ==================== GALAXY BACKGROUND - ✅ REDUCED PARTICLES ====================
+        // ==================== GALAXY BACKGROUND ====================
         function createStars() {
             const container = document.getElementById('starsContainer');
-            /* ✅ REDUCED FROM 150 TO 80 STARS - Major performance boost! */
-            for (let i = 0; i < 80; i++) { 
+            for (let i = 0; i < 150; i++) { /* ✅ Reduced star count for performance */
                 const star = document.createElement('div');
                 star.className = 'star';
                 star.style.left = Math.random() * 100 + '%';
                 star.style.top = Math.random() * 100 + '%';
-                star.style.width = Math.random() * 2 + 0.5 + 'px'; /* ✅ Smaller stars */
+                star.style.width = Math.random() * 2 + 1 + 'px'; /* ✅ Smaller stars */
                 star.style.height = star.style.width;
-                star.style.setProperty('--duration', (Math.random() * 4 + 3) + 's'); /* ✅ Slower twinkle */
+                star.style.setProperty('--duration', (Math.random() * 3 + 2) + 's');
                 container.appendChild(star);
             }
         }
 
         function createParticles() {
             const container = document.getElementById('particles');
-            /* ✅ HEAVILY REDUCED FROM 20 TO 12 PARTICLES */
-            for (let i = 0; i < 12; i++) { 
+            for (let i = 0; i < 20; i++) { /* ✅ Reduced particles */
                 const particle = document.createElement('div');
                 particle.className = 'particle';
                 particle.style.left = Math.random() * 100 + '%';
-                particle.style.animationDelay = Math.random() * 20 + 's';
-                particle.style.animationDuration = (Math.random() * 10 + 15) + 's'; /* ✅ Longer duration */
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
                 const colors = ['#00f5ff', '#ff006e', '#8b5cf6', '#ffd700'];
                 particle.style.background = colors[Math.floor(Math.random() * colors.length)];
                 container.appendChild(particle);
@@ -2524,48 +2572,42 @@
 
         setInterval(cycleThemes, 11000);
 
-        // ==================== LIVE COUNTERS - ✅ OPTIMIZED UPDATES ====================
+        // ==================== LIVE COUNTERS ====================
         let totalMembers = 1;
         let totalGroups = 3;
         let messagesPerDay = 0;
         let avgTimeSpent = 0;
 
         function updateLiveCounters() {
-            /* ✅ Use requestAnimationFrame for smoother DOM updates */
-            requestAnimationFrame(() => {
-                if (Math.random() > 0.7) {
-                    totalMembers += Math.floor(Math.random() * 3);
-                    animateCounter('totalMembers', totalMembers);
-                }
-                
-                messagesPerDay += Math.floor(Math.random() * 50);
-                document.getElementById('messagesPerDay').textContent = formatNumber(messagesPerDay);
-                
-                avgTimeSpent = Math.min(99, avgTimeSpent + Math.floor(Math.random() * 2));
-                document.getElementById('avgTimeSpent').innerHTML = avgTimeSpent + '<span style="font-size: 18px;">m</span>';
-            });
+            if (Math.random() > 0.7) {
+                totalMembers += Math.floor(Math.random() * 3);
+                animateCounter('totalMembers', totalMembers);
+            }
+            
+            messagesPerDay += Math.floor(Math.random() * 50);
+            document.getElementById('messagesPerDay').textContent = formatNumber(messagesPerDay);
+            
+            avgTimeSpent = Math.min(99, avgTimeSpent + Math.floor(Math.random() * 2));
+            document.getElementById('avgTimeSpent').innerHTML = avgTimeSpent + '<span style="font-size: 18px;">m</span>';
         }
 
         function animateCounter(elementId, targetValue) {
             const element = document.getElementById(elementId);
             const currentValue = parseInt(element.textContent) || 0;
             const increment = targetValue - currentValue;
-            const duration = 400; /* ✅ Faster animation */
-            const steps = 15; /* ✅ Fewer steps */
+            const duration = 500;
+            const steps = 20;
             const stepValue = increment / steps;
             let step = 0;
 
-            /* ✅ Use RAF for smooth counter animation */
-            function updateCounter() {
+            const timer = setInterval(() => {
                 step++;
                 element.textContent = Math.floor(currentValue + (stepValue * step));
-                if (step < steps) {
-                    requestAnimationFrame(updateCounter);
-                } else {
+                if (step >= steps) {
+                    clearInterval(timer);
                     element.textContent = targetValue;
                 }
-            }
-            requestAnimationFrame(updateCounter);
+            }, duration / steps);
         }
 
         function formatNumber(num) {
@@ -2574,7 +2616,7 @@
             return num.toString();
         }
 
-        // ==================== CHAT DEMO ANIMATION - ✅ OPTIMIZED ====================
+        // ==================== CHAT DEMO ANIMATION ====================
         const chatMessages = [
             { sender: 'Alex', text: 'Hi there! 👋', type: 'boy' },
             { sender: 'Sarah', text: 'Hello! How are you?', type: 'girl' },
@@ -2583,39 +2625,31 @@
         ];
 
         let currentMessageIndex = 0;
-        let chatAnimationTimeout = null; /* ✅ Store timeout for cleanup */
 
         function animateChatDemo() {
             const chatContainer = document.getElementById('chatDemo');
             chatContainer.innerHTML = '';
 
             chatMessages.forEach((msg, index) => {
-                /* ✅ Use RAF-based timing instead of setTimeout stacking */
-                const delay = index * 1800; /* ✅ Slightly longer delay between messages */
-                
                 setTimeout(() => {
-                    /* ✅ Check if still should animate (prevents orphaned animations) */
-                    if (!chatContainer) return;
-                    
                     const messageEl = document.createElement('div');
                     messageEl.className = `message message-${msg.type}`;
                     messageEl.innerHTML = `
                         <div class="sender-name">${msg.sender}</div>
                         ${msg.text}
                     `;
+                    messageEl.style.animationDelay = `${index * 0.1}s`;
                     chatContainer.appendChild(messageEl);
-                    
-                    /* ✅ Throttle send sounds */
-                    if (index % 2 === 0) playSound('send');
+                    playSound('send');
 
                     if (index === chatMessages.length - 1) {
                         setTimeout(() => {
-                            if (chatContainer && chatContainer.children.length > 4) {
+                            if (chatContainer.children.length > 4) {
                                 chatContainer.removeChild(chatContainer.firstChild);
                             }
-                        }, 4000); /* ✅ Longer cleanup delay */
+                        }, 3000);
                     }
-                }, delay);
+                }, index * 2000);
             });
 
             currentMessageIndex = (currentMessageIndex + 1) % chatMessages.length;
@@ -2623,9 +2657,7 @@
 
         function startChatDemoLoop() {
             animateChatDemo();
-            /* ✅ Clear previous timeout before setting new one */
-            if (chatAnimationTimeout) clearTimeout(chatAnimationTimeout);
-            chatAnimationTimeout = setInterval(animateChatDemo, 12000); /* ✅ Longer interval from 10s */
+            setInterval(animateChatDemo, 10000);
         }
 
         // ==================== MODAL FUNCTIONS ====================
@@ -2679,14 +2711,7 @@
         }
 
         function scrollToSection(sectionId) {
-            /* ✅ Use native smooth scroll behavior */
-            const element = document.getElementById(sectionId);
-            if (element) {
-                element.scrollIntoView({ 
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            }
+            document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth' });
         }
 
         // ==================== CAPTCHA SYSTEM ====================
@@ -2920,7 +2945,7 @@
                     btn.classList.remove('loading');
                     closeModal('loginModal');
                     showSuccessPopup('Login Successful!', 'Welcome back to Kings Chat');
-                }, 1800); /* ✅ Slightly faster */
+                }, 2000);
             }
         }
 
@@ -2933,10 +2958,7 @@
                 el.disabled = true;
             });
 
-            /* ✅ Use RAF for timer updates */
-            function updateTimer() {
-                if (!lockEndTime) return;
-                
+            lockTimerInterval = setInterval(() => {
                 const remaining = lockEndTime - Date.now();
                 if (remaining <= 0) {
                     clearInterval(lockTimerInterval);
@@ -2954,9 +2976,7 @@
                     const seconds = Math.floor((remaining % 60000) / 1000);
                     countdownEl.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
                 }
-            }
-            
-            lockTimerInterval = setInterval(updateTimer, 1000);
+            }, 1000);
         }
 
         function simulateEmailNotification(username) {
@@ -3030,7 +3050,7 @@
                 document.getElementById('strengthBar').className = 'strength-bar';
                 document.getElementById('strengthText').textContent = 'Enter password';
                 document.getElementById('termsCheckbox').classList.remove('checked');
-            }, 1800); /* ✅ Slightly faster */
+            }, 2000);
         }
 
         // ==================== FORGOT PASSWORD ====================
@@ -3069,7 +3089,7 @@
 
                     console.log(`[EMAIL] 8-digit verification code sent to ${email} for password reset.`);
                     playSound('success');
-                }, 1400); /* ✅ Slightly faster */
+                }, 1500);
             } else {
                 if (verifyCode.length !== 8) {
                     alert('Please enter the 8-digit verification code.');
@@ -3094,7 +3114,7 @@
                     successMsg.style.display = 'none';
                     forgotBtnText.innerHTML = '<i class="fas fa-paper-plane"></i> Send Reset Code';
                     document.getElementById('resendBtn').disabled = true;
-                }, 1400);
+                }, 1500);
             }
         }
 
@@ -3137,7 +3157,7 @@
 
             setTimeout(() => {
                 popup.classList.remove('show');
-            }, 2800); /* ✅ Slightly shorter */
+            }, 3000);
         }
 
         // ==================== INITIALIZATION ====================
@@ -3146,8 +3166,7 @@
             createParticles();
             startChatDemoLoop();
 
-            /* ✅ Use longer interval for live counters (less frequent DOM updates) */
-            setInterval(updateLiveCounters, 6000); /* Changed from 5000ms */
+            setInterval(updateLiveCounters, 5000);
 
             document.getElementById('totalMembers').textContent = totalMembers;
             document.getElementById('totalGroups').textContent = totalGroups;
@@ -3172,14 +3191,6 @@
                 });
             }
         });
-
-        /* ✅ PREVENT DEFAULT TOUCH BEHAVIOR THAT CAUSES LAG ON MOBILE */
-        document.addEventListener('touchmove', function(e) {
-            if (e.target.closest('.modal-content')) {
-                /* Allow scrolling inside modals */
-                return;
-            }
-        }, { passive: true });
     </script>
 </body>
 </html>
