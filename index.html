@@ -1859,37 +1859,30 @@
     </div>
 
     <script>
-        // ==================== 🔊 ADVANCED SOUND SYSTEM ====================
+        // ==================== 🔊 SIMPLE SOUND SYSTEM ====================
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         let audioCtx = null;
-        let isAudioInitialized = false;
 
-        // Audio initialize karne ka function
         function initAudio() {
             try {
                 if (!audioCtx) {
                     audioCtx = new AudioContext();
-                    
-                    // Resume agar suspended ho
                     if (audioCtx.state === 'suspended') {
                         audioCtx.resume();
                     }
                 }
-                isAudioInitialized = true;
                 return true;
             } catch(e) {
-                console.log('🔇 Audio not supported:', e.message);
+                console.log('🔇 Audio not supported');
                 return false;
             }
         }
 
-        // Master Sound Function - Sab sounds yahan se handle honge
-        function playSound(type) {
+        // Only Click Sound Function
+        function playClickSound() {
             try {
-                // Pehle check karo ki audio ready hai ya nahi
                 if (!initAudio()) return;
                 
-                // Audio context resume karo agar suspend ho
                 if (audioCtx.state === 'suspended') {
                     audioCtx.resume();
                 }
@@ -1900,245 +1893,38 @@
                 oscillator.connect(gainNode);
                 gainNode.connect(audioCtx.destination);
 
-                // Har sound ki alag settings
-                switch(type) {
-                    
-                    // ✅ CLICK SOUND - Button click pe (Waise hi rahega)
-                    case 'click':
-                        oscillator.frequency.setValueAtTime(800, audioCtx.currentTime);
-                        oscillator.frequency.exponentialRampToValueAtTime(600, audioCtx.currentTime + 0.05);
-                        oscillator.type = 'sine';
-                        gainNode.gain.setValueAtTime(0.15, audioCtx.currentTime);
-                        gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
-                        oscillator.start(audioCtx.currentTime);
-                        oscillator.stop(audioCtx.currentTime + 0.1);
-                        break;
-
-                    // ✅ SUCCESS SOUND - Login/Signup successful
-                    case 'success':
-                        playMelody([523, 659, 784, 1046], 0.15, 0.2, 'sine');
-                        return; // Melody function use hoga
-
-                    // ✅ ERROR SOUND - Galat input ya error
-                    case 'error':
-                        oscillator.frequency.setValueAtTime(300, audioCtx.currentTime);
-                        oscillator.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 0.15);
-                        oscillator.type = 'sawtooth';
-                        gainNode.gain.setValueAtTime(0.12, audioCtx.currentTime);
-                        gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.25);
-                        oscillator.start(audioCtx.currentTime);
-                        oscillator.stop(audioCtx.currentTime + 0.25);
-                        break;
-
-                    // ✅ TYPING SOUND - Input field mein type karte waqt
-                    case 'typing':
-                        oscillator.frequency.setValueAtTime(600 + Math.random() * 300, audioCtx.currentTime);
-                        oscillator.type = 'sine';
-                        gainNode.gain.setValueAtTime(0.04, audioCtx.currentTime);
-                        gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.06);
-                        oscillator.start(audioCtx.currentTime);
-                        oscillator.stop(audioCtx.currentTime + 0.06);
-                        break;
-
-                    // ✅ HOVER SOUND - Mouse hover pe (soft sound)
-                    case 'hover':
-                        oscillator.frequency.setValueAtTime(1200, audioCtx.currentTime);
-                        oscillator.type = 'sine';
-                        gainNode.gain.setValueAtTime(0.03, audioCtx.currentTime);
-                        gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.06);
-                        oscillator.start(audioCtx.currentTime);
-                        oscillator.stop(audioCtx.currentTime + 0.06);
-                        break;
-
-                    // ✅ MODAL OPEN SOUND - Modal khulte waqt
-                    case 'open':
-                        oscillator.frequency.setValueAtTime(400, audioCtx.currentTime);
-                        oscillator.frequency.exponentialRampToValueAtTime(900, audioCtx.currentTime + 0.12);
-                        oscillator.type = 'sine';
-                        gainNode.gain.setValueAtTime(0.14, audioCtx.currentTime);
-                        gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.18);
-                        oscillator.start(audioCtx.currentTime);
-                        oscillator.stop(audioCtx.currentTime + 0.18);
-                        break;
-
-                    // ✅ MODAL CLOSE SOUND - Modal band hone pe
-                    case 'close':
-                        oscillator.frequency.setValueAtTime(900, audioCtx.currentTime);
-                        oscillator.frequency.exponentialRampToValueAtTime(400, audioCtx.currentTime + 0.12);
-                        oscillator.type = 'sine';
-                        gainNode.gain.setValueAtTime(0.14, audioCtx.currentTime);
-                        gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.18);
-                        oscillator.start(audioCtx.currentTime);
-                        oscillator.stop(audioCtx.currentTime + 0.18);
-                        break;
-
-                    // ✅ NOTIFICATION SOUND - Alert/notification
-                    case 'notification':
-                        playMelody([523, 659, 784, 1046, 1318], 0.12, 0.15, 'sine');
-                        return;
-
-                    // ✅ MESSAGE SEND SOUND - Chat message bhejne pe
-                    case 'send':
-                        oscillator.frequency.setValueAtTime(700, audioCtx.currentTime);
-                        oscillator.frequency.exponentialRampToValueAtTime(1100, audioCtx.currentTime + 0.08);
-                        oscillator.type = 'sine';
-                        gainNode.gain.setValueAtTime(0.12, audioCtx.currentTime);
-                        gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.12);
-                        oscillator.start(audioCtx.currentTime);
-                        oscillator.stop(audioCtx.currentTime + 0.12);
-                        break;
-
-                    // ✅ LOADING SOUND - Loading screen pe
-                    case 'load':
-                        oscillator.frequency.setValueAtTime(500, audioCtx.currentTime);
-                        oscillator.type = 'triangle';
-                        gainNode.gain.setValueAtTime(0.08, audioCtx.currentTime);
-                        gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
-                        oscillator.start(audioCtx.currentTime);
-                        oscillator.stop(audioCtx.currentTime + 0.08);
-                        break;
-
-                    // ✅ POPUP SOUND - Success popup
-                    case 'popup':
-                        playMelody([784, 988, 1175], 0.18, 0.2, 'sine');
-                        return;
-
-                    default:
-                        // Default click sound
-                        oscillator.frequency.setValueAtTime(800, audioCtx.currentTime);
-                        oscillator.type = 'sine';
-                        gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
-                        gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
-                        oscillator.start(audioCtx.currentTime);
-                        oscillator.stop(audioCtx.currentTime + 0.08);
-                }
+                oscillator.frequency.setValueAtTime(800, audioCtx.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(600, audioCtx.currentTime + 0.05);
+                oscillator.type = 'sine';
+                gainNode.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
+                oscillator.start(audioCtx.currentTime);
+                oscillator.stop(audioCtx.currentTime + 0.1);
                 
             } catch(e) {
-                console.log('⚠️ Sound Error:', e.message);
-            }
-        }
-
-        // 🎵 Melody Function - Multiple notes ek saath play karne ke liye
-        function playMelody(notes, volume, gap, waveType = 'sine') {
-            try {
-                if (!audioCtx) return;
-                
-                notes.forEach((freq, i) => {
-                    setTimeout(() => {
-                        const osc = audioCtx.createOscillator();
-                        const gain = audioCtx.createGain();
-                        
-                        osc.connect(gain);
-                        gain.connect(audioCtx.destination);
-                        
-                        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-                        osc.type = waveType;
-                        
-                        gain.gain.setValueAtTime(volume, audioCtx.currentTime);
-                        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.25);
-                        
-                        osc.start(audioCtx.currentTime);
-                        osc.stop(audioCtx.currentTime + 0.25);
-                    }, i * (gap * 1000)); // Gap in milliseconds
-                });
-            } catch(e) {
-                console.log('Melody error:', e);
+                console.log('Sound error');
             }
         }
 
         // ==================== 🎯 EVENT LISTENERS SETUP ====================
         document.addEventListener('DOMContentLoaded', () => {
             
-            // Pehli click pe audio initialize (Browser restriction ke liye)
+            // Initialize Audio on first interaction
             document.addEventListener('click', function initOnClick() {
                 initAudio();
-                document.removeEventListener('click', initOnClick); // Ek baar hi chalega
+                document.removeEventListener('click', initOnClick);
             }, { once: true });
 
-            // Keyboard se bhi initialize ho jaye
-            document.addEventListener('keydown', function initOnKey() {
-                initAudio();
-                document.removeEventListener('keydown', initOnKey);
-            }, { once: true });
-
-            // Mouse move pe bhi try karo (optional)
-            document.addEventListener('mousemove', function initOnMove() {
-                if (!isAudioInitialized) {
-                    initAudio();
-                }
-                document.removeEventListener('mousemove', initOnMove);
-            }, { once: true });
-
-            // ✅ Hover Sounds - Buttons aur links pe
-            const hoverElements = document.querySelectorAll('.btn-primary, .btn-secondary, .nav-link, .feature-card, .stat-box, .logo');
-            hoverElements.forEach(el => {
-                el.addEventListener('mouseenter', () => {
-                    playSound('hover');
-                }, { passive: true }); // Performance improve
-            });
-
-            // ✅ Typing Sounds - Input fields mein
-            const inputFields = document.querySelectorAll('.form-input, .code-input');
-            inputFields.forEach(input => {
-                let lastKeyTime = 0;
-                input.addEventListener('keydown', (e) => {
-                    // Sirf character keys pe sound (arrow keys nahi)
-                    if (e.key.length === 1 || e.key === 'Backspace' || e.key === 'Delete') {
-                        const now = Date.now();
-                        // Thoda delay taaki rapid typing mein noise na ho
-                        if (now - lastKeyTime > 50) {
-                            playSound('typing');
-                            lastKeyTime = now;
-                        }
-                    }
-                });
-            });
-
-            // ✅ Click Sounds - Sab clickable elements pe auto-attach
-            const clickableElements = document.querySelectorAll('button, .nav-link, .footer-link, .modal-close, .refresh-captcha, .custom-checkbox, .checkbox-label');
+            // ✅ Click Sound on all clickable options
+            const clickableElements = document.querySelectorAll('button, .nav-link, .footer-link, .modal-close, .refresh-captcha, .custom-checkbox, .checkbox-label, .form-link a, .forgot-password a');
             clickableElements.forEach(el => {
                 el.addEventListener('click', () => {
-                    playSound('click');
+                    playClickSound();
                 });
             });
 
-            console.log('✅ Sound System Loaded Successfully!');
-            console.log('🔊 Available sounds: click, success, error, typing, hover, open, close, notification, send, load, popup');
+            console.log('✅ Kings Chat Ready - Click Sound Enabled Only!');
         });
-
-        // ==================== 🛠️ UTILITY FUNCTIONS ====================
-
-        // Sound test karne ka function (console mein chalao: testAllSounds())
-        function testAllSounds() {
-            const sounds = ['click', 'success', 'error', 'typing', 'hover', 'open', 'close', 'notification', 'send', 'load'];
-            let index = 0;
-            
-            console.log('🎵 Testing all sounds...');
-            
-            const interval = setInterval(() => {
-                if (index < sounds.length) {
-                    console.log(`▶️ Playing: ${sounds[index]}`);
-                    playSound(sounds[index]);
-                    index++;
-                } else {
-                    clearInterval(interval);
-                    console.log('✅ Sound test complete!');
-                }
-            }, 800);
-        }
-
-        // Mute/Unmute
-        function toggleMute() {
-            if (audioCtx) {
-                if (audioCtx.state === 'running') {
-                    audioCtx.suspend();
-                    console.log('🔇 Muted');
-                } else {
-                    audioCtx.resume();
-                    console.log('🔊 Unmuted');
-                }
-            }
-        }
 
         // ==================== LOADING SCREEN ====================
         let loadingProgress = 0;
@@ -2150,12 +1936,10 @@
                 loadingProgress += Math.random() * 3 + 1;
                 if (loadingProgress > 100) loadingProgress = 100;
                 loadingPercentage.textContent = Math.floor(loadingProgress) + '%';
-                playSound('load');
                 setTimeout(simulateLoading, 50 + Math.random() * 100);
             } else {
                 setTimeout(() => {
                     loadingScreen.classList.add('hidden');
-                    playSound('success');
                     initializeApp();
                 }, 500);
             }
@@ -2203,13 +1987,12 @@
         setInterval(cycleThemes, 11000);
 
         // ==================== LIVE COUNTERS ====================
-        let totalMembers = 1; // Starts with 1 (AI Bot)
-        let totalGroups = 3; // 3 default groups
+        let totalMembers = 1;
+        let totalGroups = 3;
         let messagesPerDay = 0;
         let avgTimeSpent = 0;
 
         function updateLiveCounters() {
-            // Simulate live updates
             if (Math.random() > 0.7) {
                 totalMembers += Math.floor(Math.random() * 3);
                 animateCounter('totalMembers', totalMembers);
@@ -2271,9 +2054,7 @@
                     `;
                     messageEl.style.animationDelay = `${index * 0.1}s`;
                     chatContainer.appendChild(messageEl);
-                    playSound('send');
 
-                    // Remove old messages after showing all
                     if (index === chatMessages.length - 1) {
                         setTimeout(() => {
                             if (chatContainer.children.length > 4) {
@@ -2287,7 +2068,6 @@
             currentMessageIndex = (currentMessageIndex + 1) % chatMessages.length;
         }
 
-        // Start chat demo loop
         function startChatDemoLoop() {
             animateChatDemo();
             setInterval(animateChatDemo, 10000);
@@ -2295,33 +2075,27 @@
 
         // ==================== MODAL FUNCTIONS ====================
         function showModal(modalId) {
-            playSound('open');
             const modal = document.getElementById(modalId);
             modal.classList.add('active');
             document.body.style.overflow = 'hidden';
 
-            // Generate captchas if signup/login modal
             if (modalId === 'signupModal') generateCaptcha();
             if (modalId === 'loginModal') generateLoginCaptcha();
 
-            // Check VPN for auth modals
             if (modalId === 'signupModal' || modalId === 'loginModal') {
                 checkVPN(modalId);
             }
         }
 
         function closeModal(modalId) {
-            playSound('close');
             const modal = document.getElementById(modalId);
             modal.classList.remove('active');
             document.body.style.overflow = '';
         }
 
-        // Close modal on overlay click
         document.querySelectorAll('.modal-overlay').forEach(modal => {
             modal.addEventListener('click', (e) => {
                 if (e.target === modal) {
-                    playSound('close');
                     modal.classList.remove('active');
                     document.body.style.overflow = '';
                 }
@@ -2389,7 +2163,6 @@
                 input.classList.add('error');
                 errorEl.textContent = 'This username is reserved and cannot be used.';
                 errorEl.classList.add('show');
-                playSound('error');
                 return false;
             }
 
@@ -2488,22 +2261,18 @@
                 icon.classList.remove('fa-eye-slash');
                 icon.classList.add('fa-eye');
             }
-            playSound('click');
         }
 
         function toggleCheckbox(element) {
             element.classList.toggle('checked');
-            playSound('click');
         }
 
         // ==================== VPN DETECTION ====================
         async function checkVPN(modalId) {
             try {
-                // Simple check using public APIs
                 const response = await fetch('https://ipapi.co/json/');
                 const data = await response.json();
 
-                // Check for common proxy/VPN indicators
                 const warningEl = document.getElementById(modalId === 'signupModal' ? 'signupVpnWarning' : 'loginVpnWarning');
 
                 if (data.proxy || data.hosting || data.organization?.toLowerCase().includes('vpn')) {
@@ -2526,9 +2295,7 @@
 
         function handleLogin(e) {
             e.preventDefault();
-            playSound('click');
 
-            // Check if locked
             if (lockEndTime && Date.now() < lockEndTime) {
                 return;
             }
@@ -2540,11 +2307,9 @@
             const errorText = document.getElementById('loginErrorText');
             const termsChecked = document.getElementById('loginTermsCheckbox').classList.contains('checked');
 
-            // Validation
             if (!termsChecked) {
                 errorText.textContent = 'Please agree to Terms of Service.';
                 errorEl.classList.add('show');
-                playSound('error');
                 return;
             }
 
@@ -2553,35 +2318,27 @@
                 errorEl.classList.add('show');
                 generateLoginCaptcha();
                 document.getElementById('loginCaptchaInput').value = '';
-                playSound('error');
                 return;
             }
 
-            // Simulate login (in real app, verify with backend)
-            const isSuccess = Math.random() > 0.5; // Simulate random success/failure
+            const isSuccess = Math.random() > 0.5;
 
             if (!isSuccess) {
                 loginAttempts++;
                 errorEl.classList.add('show');
 
                 if (loginAttempts >= 3) {
-                    // Lock account for 2 minutes
                     lockEndTime = Date.now() + (2 * 60 * 1000);
                     startLockTimer();
                     errorText.textContent = 'Too many failed attempts. Account locked for 2 minutes.';
-                    
-                    // Simulate sending email notification
                     simulateEmailNotification(username);
                 } else {
                     errorText.textContent = `Invalid username or password. Attempts remaining: ${3 - loginAttempts}`;
                 }
-                playSound('error');
             } else {
-                // Success
                 loginAttempts = 0;
                 errorEl.classList.remove('show');
                 document.getElementById('loginSuccess').classList.add('show');
-                playSound('success');
 
                 const btn = document.getElementById('loginBtn');
                 btn.classList.add('loading');
@@ -2600,7 +2357,6 @@
             const countdownEl = document.getElementById('lockCountdown');
             lockTimerEl.classList.add('show');
 
-            // Disable form inputs
             document.querySelectorAll('#loginForm input, #loginForm button').forEach(el => {
                 el.disabled = true;
             });
@@ -2613,12 +2369,10 @@
                     loginAttempts = 0;
                     lockEndTime = null;
 
-                    // Re-enable form inputs
                     document.querySelectorAll('#loginForm input, #loginForm button').forEach(el => {
                         el.disabled = false;
                     });
                     generateLoginCaptcha();
-                    playSound('notification');
                 } else {
                     const minutes = Math.floor(remaining / 60000);
                     const seconds = Math.floor((remaining % 60000) / 1000);
@@ -2628,14 +2382,12 @@
         }
 
         function simulateEmailNotification(username) {
-            console.log(`[EMAIL SENT] Security Alert: 3 failed login attempts for account "${username}" on King's Chat. If this was not you, please change your password immediately. Your safety is our responsibility.`);
-            // In production, this would send actual email via backend
+            console.log(`[EMAIL SENT] Security Alert: 3 failed login attempts for account "${username}"`);
         }
 
         // ==================== SIGNUP HANDLER ====================
         function handleSignup(e) {
             e.preventDefault();
-            playSound('click');
 
             const username = document.getElementById('signupUsername').value;
             const email = document.getElementById('signupEmail').value;
@@ -2646,7 +2398,6 @@
             const errorEl = document.getElementById('signupError');
             const errorText = document.getElementById('signupErrorText');
 
-            // Validations
             if (!validateUsername(document.getElementById('signupUsername'))) {
                 errorText.textContent = 'Please fix username errors.';
                 errorEl.classList.add('show');
@@ -2656,14 +2407,12 @@
             if (password.length < 8) {
                 errorText.textContent = 'Password must be at least 8 characters long.';
                 errorEl.classList.add('show');
-                playSound('error');
                 return;
             }
 
             if (password !== repeatPassword) {
                 errorText.textContent = 'Passwords do not match.';
                 errorEl.classList.add('show');
-                playSound('error');
                 return;
             }
 
@@ -2672,34 +2421,27 @@
                 errorEl.classList.add('show');
                 generateCaptcha();
                 document.getElementById('captchaInput').value = '';
-                playSound('error');
                 return;
             }
 
             if (!termsChecked) {
                 errorText.textContent = 'You must agree to Terms and Conditions.';
                 errorEl.classList.add('show');
-                playSound('error');
                 return;
             }
 
-            // Show loading
             const btn = document.getElementById('signupBtn');
             btn.classList.add('loading');
 
-            // Simulate API call
             setTimeout(() => {
                 btn.classList.remove('loading');
                 errorEl.classList.remove('show');
                 closeModal('signupModal');
                 showSuccessPopup('Account Created!', `Welcome to Kings Chat, ${username}!`);
-                playSound('notification');
 
-                // Update member count
                 totalMembers++;
                 animateCounter('totalMembers', totalMembers);
 
-                // Reset form
                 document.getElementById('signupForm').reset();
                 document.getElementById('strengthBar').className = 'strength-bar';
                 document.getElementById('strengthText').textContent = 'Enter password';
@@ -2713,7 +2455,6 @@
 
         function handleForgotPassword(e) {
             e.preventDefault();
-            playSound('click');
 
             const username = document.getElementById('forgotUsername').value;
             const email = document.getElementById('forgotEmail').value;
@@ -2725,13 +2466,11 @@
             const successMsg = document.getElementById('forgotSuccess');
 
             if (!resetSection.classList.contains('show')) {
-                // First step: Send code
                 if (!username || !email) {
                     alert('Please fill in username and email.');
                     return;
                 }
 
-                // Show loading
                 forgotBtn.classList.add('loading');
 
                 setTimeout(() => {
@@ -2740,16 +2479,12 @@
                     resetSection.classList.add('show');
                     forgotBtnText.innerHTML = '<i class="fas fa-check"></i> Reset Password';
 
-                    // Start code expiration timer
                     codeExpiration = Date.now() + (5 * 60 * 1000);
                     startCodeTimer();
 
-                    // Generate simulated code
                     console.log(`[EMAIL] 8-digit verification code sent to ${email} for password reset.`);
-                    playSound('success');
                 }, 1500);
             } else {
-                // Second step: Verify code and reset
                 if (verifyCode.length !== 8) {
                     alert('Please enter the 8-digit verification code.');
                     return;
@@ -2760,16 +2495,13 @@
                     return;
                 }
 
-                // Simulate verification
                 forgotBtn.classList.add('loading');
 
                 setTimeout(() => {
                     forgotBtn.classList.remove('loading');
                     closeModal('forgotPasswordModal');
                     showSuccessPopup('Password Reset!', 'Your password has been changed successfully.');
-                    playSound('notification');
 
-                    // Reset form
                     document.getElementById('forgotForm').reset();
                     resetSection.classList.remove('show');
                     successMsg.style.display = 'none';
@@ -2800,7 +2532,6 @@
         }
 
         function resendCode() {
-            playSound('click');
             codeExpiration = Date.now() + (5 * 60 * 1000);
             startCodeTimer();
             document.getElementById('resendBtn').disabled = true;
@@ -2815,7 +2546,6 @@
             popup.querySelector('h3').textContent = title;
             popup.querySelector('p').textContent = message;
             popup.classList.add('show');
-            playSound('popup');
 
             setTimeout(() => {
                 popup.classList.remove('show');
@@ -2828,30 +2558,21 @@
             createParticles();
             startChatDemoLoop();
 
-            // Start live counter updates
             setInterval(updateLiveCounters, 5000);
 
-            // Initial counter values
             document.getElementById('totalMembers').textContent = totalMembers;
             document.getElementById('totalGroups').textContent = totalGroups;
 
-            // Apply first theme
             document.body.classList.add(themes[0]);
 
             console.log('%c👑 Kings Chat Initialized Successfully!', 
                 'color: #00f5ff; font-size: 20px; font-weight: bold; text-shadow: 0 0 10px #00f5ff;');
-            console.log('%c⚡ Turbo Mode Activated - World Record Breaking Chat Platform!', 
-                'color: #ff006e; font-size: 14px;');
-            console.log('%c🔊 Sound System: All sounds enabled! Type testAllSounds() in console to test.', 
-                'color: #ffd700; font-size: 12px;');
         }
 
-        // Start loading simulation when page loads
         window.addEventListener('load', () => {
             simulateLoading();
         });
 
-        // Keyboard shortcuts
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 document.querySelectorAll('.modal-overlay.active').forEach(modal => {
