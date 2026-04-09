@@ -2,22 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Kings Chat - Connect Worldwide</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * {html {
-            overflow-x: hidden;
-            max-width: 100vw;
-        }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
 
         :root {
             --primary-galaxy: #0a0a2e;
@@ -28,6 +22,11 @@
             --accent-gold: #ffd700;
             --text-primary: #ffffff;
             --text-secondary: #b4b4b4;
+        }
+
+        html {
+            overflow-x: hidden;
+            width: 100%;
         }
 
         body {
@@ -198,12 +197,15 @@
             justify-content: space-between;
             align-items: center;
             box-shadow: 0 4px 30px rgba(0, 245, 255, 0.1);
+            width: 100%;
+            max-width: 100vw;
         }
 
         .logo-container {
             display: flex;
             align-items: center;
             gap: 15px;
+            flex-shrink: 0;
         }
 
         .logo {
@@ -221,6 +223,7 @@
             animation: logoGlow 2s ease-in-out infinite alternate;
             position: relative;
             overflow: hidden;
+            flex-shrink: 0;
         }
 
         .logo::before {
@@ -254,12 +257,15 @@
             background-clip: text;
             text-shadow: 0 0 30px rgba(0, 245, 255, 0.5);
             letter-spacing: 2px;
+            white-space: nowrap;
         }
 
         .nav-links {
             display: flex;
             gap: 25px;
             align-items: center;
+            flex-wrap: wrap;
+            justify-content: flex-end;
         }
 
         .nav-link {
@@ -271,6 +277,7 @@
             padding: 8px 15px;
             border-radius: 8px;
             position: relative;
+            white-space: nowrap;
         }
 
         .nav-link:hover {
@@ -299,6 +306,9 @@
         .main-container {
             min-height: 100vh;
             padding-top: 100px;
+            width: 100%;
+            max-width: 100vw;
+            overflow-x: hidden;
         }
 
         /* Hero Section */
@@ -311,6 +321,9 @@
             padding: 40px 5%;
             text-align: center;
             position: relative;
+            width: 100%;
+            max-width: 100vw;
+            overflow-x: hidden;
         }
 
         .welcome-text {
@@ -323,6 +336,8 @@
             background-clip: text;
             animation: fadeInUp 1s ease;
             line-height: 1.3;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
 
         .welcome-subtitle {
@@ -330,6 +345,9 @@
             color: var(--text-secondary);
             margin-bottom: 50px;
             animation: fadeInUp 1s ease 0.2s both;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            padding: 0 10px;
         }
 
         @keyframes fadeInUp {
@@ -350,6 +368,9 @@
             margin-bottom: 60px;
             flex-wrap: wrap;
             justify-content: center;
+            width: 100%;
+            max-width: 600px;
+            padding: 0 10px;
         }
 
         .btn-primary, .btn-secondary {
@@ -364,6 +385,9 @@
             overflow: hidden;
             text-transform: uppercase;
             letter-spacing: 1px;
+            min-width: 200px;
+            flex: 1 1 auto;
+            max-width: 280px;
         }
 
         .btn-primary {
@@ -411,6 +435,7 @@
             position: relative;
             overflow: hidden;
             animation: bounceIn 1s ease both;
+            width: 100%;
         }
 
         .stat-box:nth-child(1) { animation-delay: 0.1s; }
@@ -453,6 +478,7 @@
             font-family: 'Orbitron', sans-serif;
             text-shadow: 0 0 20px rgba(0, 245, 255, 0.5);
             margin-bottom: 10px;
+            word-break: break-all;
         }
 
         .stat-label {
@@ -480,6 +506,9 @@
                 inset 0 0 30px rgba(0, 245, 255, 0.1);
             position: relative;
             animation: phoneFloat 4s ease-in-out infinite;
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
         }
 
         @keyframes phoneFloat {
@@ -494,6 +523,7 @@
             min-height: 450px;
             position: relative;
             overflow: hidden;
+            width: 100%;
         }
 
         .chat-header {
@@ -520,6 +550,8 @@
             border-radius: 18px;
             animation: messageSlide 0.5s ease both;
             position: relative;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
 
         .message-boy {
@@ -571,6 +603,9 @@
         .features-section {
             padding: 100px 5%;
             background: rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 100vw;
+            overflow-x: hidden;
         }
 
         .section-title {
@@ -582,6 +617,8 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            word-wrap: break-word;
+            padding: 0 10px;
         }
 
         .features-grid {
@@ -590,6 +627,7 @@
             gap: 30px;
             max-width: 1400px;
             margin: 0 auto;
+            width: 100%;
         }
 
         .feature-card {
@@ -602,6 +640,7 @@
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
             overflow: hidden;
+            width: 100%;
         }
 
         .feature-card::before {
@@ -648,12 +687,14 @@
             font-weight: 700;
             margin-bottom: 15px;
             color: var(--text-primary);
+            word-wrap: break-word;
         }
 
         .feature-description {
             color: var(--text-secondary);
             line-height: 1.7;
             font-size: 15px;
+            word-wrap: break-word;
         }
 
         /* Modal Styles */
@@ -671,6 +712,8 @@
             z-index: 2000;
             opacity: 0;
             transition: opacity 0.3s ease;
+            padding: 20px;
+            overflow-y: auto;
         }
 
         .modal-overlay.active {
@@ -683,13 +726,14 @@
             border: 2px solid rgba(0, 245, 255, 0.3);
             border-radius: 30px;
             padding: 50px;
-            width: 90%;
+            width: 100%;
             max-width: 480px;
             position: relative;
             box-shadow: 0 0 60px rgba(0, 245, 255, 0.3);
             animation: modalSlideIn 0.5s ease;
             max-height: 90vh;
             overflow-y: auto;
+            margin: 20px auto;
         }
 
         @keyframes modalSlideIn {
@@ -719,6 +763,7 @@
             align-items: center;
             justify-content: center;
             border-radius: 50%;
+            flex-shrink: 0;
         }
 
         .modal-close:hover {
@@ -736,12 +781,15 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            word-wrap: break-word;
+            padding-right: 50px;
         }
 
         /* Form Styles */
         .form-group {
             margin-bottom: 25px;
             position: relative;
+            width: 100%;
         }
 
         .form-label {
@@ -762,6 +810,7 @@
             font-size: 16px;
             transition: all 0.3s ease;
             font-family: 'Poppins', sans-serif;
+            box-sizing: border-box;
         }
 
         .form-input:focus {
@@ -786,6 +835,7 @@
             font-size: 13px;
             margin-top: 5px;
             display: none;
+            word-wrap: break-word;
         }
 
         .error-message.show {
@@ -828,6 +878,7 @@
         /* Eye Icon for Password */
         .password-wrapper {
             position: relative;
+            width: 100%;
         }
 
         .eye-toggle {
@@ -841,6 +892,7 @@
             cursor: pointer;
             font-size: 18px;
             transition: color 0.3s ease;
+            padding: 5px;
         }
 
         .eye-toggle:hover {
@@ -854,6 +906,7 @@
             border-radius: 15px;
             padding: 20px;
             text-align: center;
+            width: 100%;
         }
 
         .captcha-display {
@@ -869,6 +922,8 @@
             font-family: 'Courier New', monospace;
             text-decoration: line-through;
             text-decoration-color: rgba(255, 0, 110, 0.5);
+            word-break: break-all;
+            overflow-wrap: break-word;
         }
 
         .refresh-captcha {
@@ -890,6 +945,7 @@
             align-items: flex-start;
             gap: 12px;
             margin: 20px 0;
+            width: 100%;
         }
 
         .custom-checkbox {
@@ -922,6 +978,7 @@
             font-size: 14px;
             line-height: 1.5;
             cursor: pointer;
+            word-wrap: break-word;
         }
 
         .checkbox-label a {
@@ -949,6 +1006,7 @@
             overflow: hidden;
             text-transform: uppercase;
             letter-spacing: 2px;
+            box-sizing: border-box;
         }
 
         .submit-btn:hover:not(:disabled) {
@@ -989,6 +1047,7 @@
             text-align: center;
             margin-top: 20px;
             color: var(--text-secondary);
+            word-wrap: break-word;
         }
 
         .form-link a {
@@ -1030,6 +1089,8 @@
             align-items: center;
             gap: 12px;
             animation: slideDown 0.3s ease;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .alert-message.show {
@@ -1074,6 +1135,8 @@
             border-radius: 15px;
             margin-top: 20px;
             display: none;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .lock-timer.show {
@@ -1094,11 +1157,15 @@
             padding: 40px 5%;
             text-align: center;
             border-top: 1px solid rgba(0, 245, 255, 0.1);
+            width: 100%;
+            max-width: 100vw;
+            overflow-x: hidden;
         }
 
         .footer-content {
             max-width: 1200px;
             margin: 0 auto;
+            width: 100%;
         }
 
         .footer-links {
@@ -1114,6 +1181,7 @@
             text-decoration: none;
             transition: color 0.3s ease;
             cursor: pointer;
+            white-space: nowrap;
         }
 
         .footer-link:hover {
@@ -1126,6 +1194,8 @@
             border-radius: 15px;
             padding: 25px;
             margin: 30px 0;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .support-info h4 {
@@ -1138,88 +1208,74 @@
             color: var(--text-secondary);
             line-height: 1.7;
             font-size: 14px;
+            word-wrap: break-word;
         }
 
         .copyright {
             color: var(--text-secondary);
             font-size: 14px;
             margin-top: 20px;
+            word-wrap: break-word;
         }
 
         /* Responsive Design */
-                @media (max-width: 768px) {
+        @media (max-width: 768px) {
             .navbar {
-                padding: 10px 15px;
-                flex-wrap: wrap;
-                justify-content: center;
+                padding: 12px 4%;
+                flex-direction: column;
                 gap: 10px;
             }
 
             .site-name {
-                font-size: 18px;
+                font-size: 20px;
             }
 
             .logo {
-                width: 40px;
-                height: 40px;
-                font-size: 18px;
+                width: 45px;
+                height: 45px;
+                font-size: 22px;
             }
 
             .nav-links {
-                gap: 5px;
-                width: 100%;
+                gap: 10px;
                 justify-content: center;
-                flex-wrap: wrap;
             }
 
             .nav-link {
-                padding: 5px 8px;
-                font-size: 12px;
-            }
-            
-            .navbar .btn-primary {
-                padding: 6px 12px !important;
-                font-size: 12px !important;
+                padding: 6px 10px;
+                font-size: 14px;
             }
 
             .welcome-text {
-                font-size: 26px;
-                padding: 0 10px;
+                font-size: 32px;
             }
 
             .welcome-subtitle {
-                font-size: 15px;
-                padding: 0 15px;
+                font-size: 16px;
             }
 
             .auth-buttons {
                 flex-direction: column;
                 width: 100%;
-                max-width: 280px;
+                max-width: 300px;
+                padding: 0;
             }
 
             .btn-primary, .btn-secondary {
                 width: 100%;
-                padding: 14px 25px;
-                font-size: 15px;
+                padding: 15px 30px;
+                min-width: unset;
+                max-width: 100%;
             }
 
             .stats-section {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
                 gap: 15px;
                 padding: 0 10px;
             }
-            
-            .stat-box {
-                padding: 20px 10px;
-            }
 
             .stat-number {
-                font-size: 26px;
-            }
-            
-            .stat-icon {
-                font-size: 36px;
+                font-size: 28px;
             }
 
             .phone-mockup {
@@ -1229,40 +1285,137 @@
 
             .section-title {
                 font-size: 28px;
-                padding: 0 10px;
             }
 
             .features-grid {
                 grid-template-columns: 1fr;
-                padding: 0 10px;
+                gap: 20px;
             }
 
             .modal-content {
-                padding: 25px 15px;
+                padding: 30px 20px;
                 margin: 10px;
-                width: 95%;
+                border-radius: 20px;
             }
 
             .modal-title {
-                font-size: 22px;
+                font-size: 24px;
+                padding-right: 40px;
             }
-            
+
+            .feature-card {
+                padding: 30px 20px;
+            }
+
             .footer-links {
                 gap: 15px;
+            }
+
+            .footer-link {
+                font-size: 14px;
             }
         }
 
         @media (max-width: 480px) {
             .welcome-text {
-                font-size: 26px;
+                font-size: 24px;
+            }
+
+            .welcome-subtitle {
+                font-size: 14px;
             }
 
             .stat-box {
-                padding: 25px 15px;
+                padding: 20px 15px;
+            }
+
+            .stat-icon {
+                font-size: 36px;
+            }
+
+            .stat-number {
+                font-size: 24px;
+            }
+
+            .stat-label {
+                font-size: 12px;
             }
 
             .feature-card {
-                padding: 30px 20px;
+                padding: 25px 15px;
+            }
+
+            .feature-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 28px;
+            }
+
+            .feature-title {
+                font-size: 20px;
+            }
+
+            .modal-content {
+                padding: 25px 15px;
+            }
+
+            .modal-title {
+                font-size: 22px;
+            }
+
+            .form-input {
+                padding: 14px 16px;
+                font-size: 14px;
+            }
+
+            .submit-btn {
+                padding: 16px;
+                font-size: 16px;
+            }
+
+            .captcha-display {
+                font-size: 22px;
+                letter-spacing: 4px;
+                padding: 12px;
+            }
+
+            .support-info {
+                padding: 20px 15px;
+            }
+
+            .copyright {
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 320px) {
+            .navbar {
+                padding: 10px 3%;
+            }
+
+            .logo {
+                width: 40px;
+                height: 40px;
+                font-size: 18px;
+            }
+
+            .site-name {
+                font-size: 16px;
+            }
+
+            .nav-links {
+                gap: 5px;
+            }
+
+            .nav-link {
+                padding: 5px 8px;
+                font-size: 12px;
+            }
+
+            .btn-primary,
+            .btn-secondary {
+                font-size: 14px;
+                padding: 12px 24px;
             }
         }
 
@@ -1295,6 +1448,9 @@
             opacity: 0;
             transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             box-shadow: 0 0 80px rgba(68, 255, 68, 0.5);
+            width: 90%;
+            max-width: 400px;
+            margin: 0 auto;
         }
 
         .success-popup.show {
@@ -1319,10 +1475,12 @@
             font-size: 28px;
             color: #44ff44;
             margin-bottom: 15px;
+            word-wrap: break-word;
         }
 
         .success-popup p {
             color: var(--text-secondary);
+            word-wrap: break-word;
         }
 
         /* Particle Effect */
@@ -1334,6 +1492,7 @@
             height: 100%;
             pointer-events: none;
             z-index: -1;
+            overflow: hidden;
         }
 
         .particle {
@@ -1396,6 +1555,8 @@
             gap: 10px;
             color: #ff4444;
             font-size: 14px;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .vpn-warning.show {
@@ -1405,6 +1566,7 @@
         /* Code Verification Box */
         .code-verification {
             display: none;
+            width: 100%;
         }
 
         .code-verification.show {
@@ -1417,6 +1579,8 @@
             font-size: 24px;
             letter-spacing: 10px;
             font-family: 'Orbitron', monospace;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .timer-display {
