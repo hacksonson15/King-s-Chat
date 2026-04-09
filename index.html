@@ -24,19 +24,18 @@
             --text-secondary: #b4b4b4;
         }
 
-        html {
+        /* Fix for Horizontal Scroll on Mobile */
+        html, body {
+            max-width: 100vw;
             overflow-x: hidden;
-            width: 100%;
+            touch-action: pan-y;
         }
 
         body {
             font-family: 'Poppins', sans-serif;
             background: var(--primary-galaxy);
             color: var(--text-primary);
-            overflow-x: hidden;
             position: relative;
-            width: 100%;
-            max-width: 100vw;
         }
 
         /* Galaxy Background Animation */
@@ -47,7 +46,7 @@
             width: 100%;
             height: 100%;
             z-index: -1;
-            overflow: hidden;
+            overflow: hidden; /* Clips the glow corners and nebulas */
         }
 
         .stars {
@@ -197,15 +196,12 @@
             justify-content: space-between;
             align-items: center;
             box-shadow: 0 4px 30px rgba(0, 245, 255, 0.1);
-            width: 100%;
-            max-width: 100vw;
         }
 
         .logo-container {
             display: flex;
             align-items: center;
             gap: 15px;
-            flex-shrink: 0;
         }
 
         .logo {
@@ -223,7 +219,6 @@
             animation: logoGlow 2s ease-in-out infinite alternate;
             position: relative;
             overflow: hidden;
-            flex-shrink: 0;
         }
 
         .logo::before {
@@ -257,15 +252,12 @@
             background-clip: text;
             text-shadow: 0 0 30px rgba(0, 245, 255, 0.5);
             letter-spacing: 2px;
-            white-space: nowrap;
         }
 
         .nav-links {
             display: flex;
             gap: 25px;
             align-items: center;
-            flex-wrap: wrap;
-            justify-content: flex-end;
         }
 
         .nav-link {
@@ -277,7 +269,6 @@
             padding: 8px 15px;
             border-radius: 8px;
             position: relative;
-            white-space: nowrap;
         }
 
         .nav-link:hover {
@@ -306,9 +297,6 @@
         .main-container {
             min-height: 100vh;
             padding-top: 100px;
-            width: 100%;
-            max-width: 100vw;
-            overflow-x: hidden;
         }
 
         /* Hero Section */
@@ -321,9 +309,6 @@
             padding: 40px 5%;
             text-align: center;
             position: relative;
-            width: 100%;
-            max-width: 100vw;
-            overflow-x: hidden;
         }
 
         .welcome-text {
@@ -336,8 +321,6 @@
             background-clip: text;
             animation: fadeInUp 1s ease;
             line-height: 1.3;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
         }
 
         .welcome-subtitle {
@@ -345,9 +328,6 @@
             color: var(--text-secondary);
             margin-bottom: 50px;
             animation: fadeInUp 1s ease 0.2s both;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-            padding: 0 10px;
         }
 
         @keyframes fadeInUp {
@@ -368,9 +348,6 @@
             margin-bottom: 60px;
             flex-wrap: wrap;
             justify-content: center;
-            width: 100%;
-            max-width: 600px;
-            padding: 0 10px;
         }
 
         .btn-primary, .btn-secondary {
@@ -385,9 +362,6 @@
             overflow: hidden;
             text-transform: uppercase;
             letter-spacing: 1px;
-            min-width: 200px;
-            flex: 1 1 auto;
-            max-width: 280px;
         }
 
         .btn-primary {
@@ -435,7 +409,6 @@
             position: relative;
             overflow: hidden;
             animation: bounceIn 1s ease both;
-            width: 100%;
         }
 
         .stat-box:nth-child(1) { animation-delay: 0.1s; }
@@ -478,7 +451,6 @@
             font-family: 'Orbitron', sans-serif;
             text-shadow: 0 0 20px rgba(0, 245, 255, 0.5);
             margin-bottom: 10px;
-            word-break: break-all;
         }
 
         .stat-label {
@@ -506,9 +478,6 @@
                 inset 0 0 30px rgba(0, 245, 255, 0.1);
             position: relative;
             animation: phoneFloat 4s ease-in-out infinite;
-            width: 100%;
-            max-width: 400px;
-            margin: 0 auto;
         }
 
         @keyframes phoneFloat {
@@ -523,7 +492,6 @@
             min-height: 450px;
             position: relative;
             overflow: hidden;
-            width: 100%;
         }
 
         .chat-header {
@@ -550,8 +518,6 @@
             border-radius: 18px;
             animation: messageSlide 0.5s ease both;
             position: relative;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
         }
 
         .message-boy {
@@ -603,9 +569,6 @@
         .features-section {
             padding: 100px 5%;
             background: rgba(0, 0, 0, 0.3);
-            width: 100%;
-            max-width: 100vw;
-            overflow-x: hidden;
         }
 
         .section-title {
@@ -617,8 +580,6 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            word-wrap: break-word;
-            padding: 0 10px;
         }
 
         .features-grid {
@@ -627,7 +588,6 @@
             gap: 30px;
             max-width: 1400px;
             margin: 0 auto;
-            width: 100%;
         }
 
         .feature-card {
@@ -640,7 +600,6 @@
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
             overflow: hidden;
-            width: 100%;
         }
 
         .feature-card::before {
@@ -687,14 +646,12 @@
             font-weight: 700;
             margin-bottom: 15px;
             color: var(--text-primary);
-            word-wrap: break-word;
         }
 
         .feature-description {
             color: var(--text-secondary);
             line-height: 1.7;
             font-size: 15px;
-            word-wrap: break-word;
         }
 
         /* Modal Styles */
@@ -712,8 +669,8 @@
             z-index: 2000;
             opacity: 0;
             transition: opacity 0.3s ease;
-            padding: 20px;
-            overflow-y: auto;
+            padding: 15px; /* Added padding for mobile */
+            overflow-y: auto; /* Allow vertical scroll if modal is too tall */
         }
 
         .modal-overlay.active {
@@ -733,7 +690,7 @@
             animation: modalSlideIn 0.5s ease;
             max-height: 90vh;
             overflow-y: auto;
-            margin: 20px auto;
+            margin: auto; /* Centering */
         }
 
         @keyframes modalSlideIn {
@@ -763,7 +720,6 @@
             align-items: center;
             justify-content: center;
             border-radius: 50%;
-            flex-shrink: 0;
         }
 
         .modal-close:hover {
@@ -781,15 +737,12 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            word-wrap: break-word;
-            padding-right: 50px;
         }
 
         /* Form Styles */
         .form-group {
             margin-bottom: 25px;
             position: relative;
-            width: 100%;
         }
 
         .form-label {
@@ -810,7 +763,6 @@
             font-size: 16px;
             transition: all 0.3s ease;
             font-family: 'Poppins', sans-serif;
-            box-sizing: border-box;
         }
 
         .form-input:focus {
@@ -835,7 +787,6 @@
             font-size: 13px;
             margin-top: 5px;
             display: none;
-            word-wrap: break-word;
         }
 
         .error-message.show {
@@ -878,7 +829,6 @@
         /* Eye Icon for Password */
         .password-wrapper {
             position: relative;
-            width: 100%;
         }
 
         .eye-toggle {
@@ -892,7 +842,6 @@
             cursor: pointer;
             font-size: 18px;
             transition: color 0.3s ease;
-            padding: 5px;
         }
 
         .eye-toggle:hover {
@@ -906,7 +855,6 @@
             border-radius: 15px;
             padding: 20px;
             text-align: center;
-            width: 100%;
         }
 
         .captcha-display {
@@ -922,8 +870,6 @@
             font-family: 'Courier New', monospace;
             text-decoration: line-through;
             text-decoration-color: rgba(255, 0, 110, 0.5);
-            word-break: break-all;
-            overflow-wrap: break-word;
         }
 
         .refresh-captcha {
@@ -945,7 +891,6 @@
             align-items: flex-start;
             gap: 12px;
             margin: 20px 0;
-            width: 100%;
         }
 
         .custom-checkbox {
@@ -978,7 +923,6 @@
             font-size: 14px;
             line-height: 1.5;
             cursor: pointer;
-            word-wrap: break-word;
         }
 
         .checkbox-label a {
@@ -1006,7 +950,6 @@
             overflow: hidden;
             text-transform: uppercase;
             letter-spacing: 2px;
-            box-sizing: border-box;
         }
 
         .submit-btn:hover:not(:disabled) {
@@ -1047,7 +990,6 @@
             text-align: center;
             margin-top: 20px;
             color: var(--text-secondary);
-            word-wrap: break-word;
         }
 
         .form-link a {
@@ -1089,8 +1031,6 @@
             align-items: center;
             gap: 12px;
             animation: slideDown 0.3s ease;
-            width: 100%;
-            box-sizing: border-box;
         }
 
         .alert-message.show {
@@ -1135,8 +1075,6 @@
             border-radius: 15px;
             margin-top: 20px;
             display: none;
-            width: 100%;
-            box-sizing: border-box;
         }
 
         .lock-timer.show {
@@ -1157,15 +1095,11 @@
             padding: 40px 5%;
             text-align: center;
             border-top: 1px solid rgba(0, 245, 255, 0.1);
-            width: 100%;
-            max-width: 100vw;
-            overflow-x: hidden;
         }
 
         .footer-content {
             max-width: 1200px;
             margin: 0 auto;
-            width: 100%;
         }
 
         .footer-links {
@@ -1181,7 +1115,6 @@
             text-decoration: none;
             transition: color 0.3s ease;
             cursor: pointer;
-            white-space: nowrap;
         }
 
         .footer-link:hover {
@@ -1194,8 +1127,6 @@
             border-radius: 15px;
             padding: 25px;
             margin: 30px 0;
-            width: 100%;
-            box-sizing: border-box;
         }
 
         .support-info h4 {
@@ -1208,46 +1139,46 @@
             color: var(--text-secondary);
             line-height: 1.7;
             font-size: 14px;
-            word-wrap: break-word;
         }
 
         .copyright {
             color: var(--text-secondary);
             font-size: 14px;
             margin-top: 20px;
-            word-wrap: break-word;
         }
 
         /* Responsive Design */
         @media (max-width: 768px) {
             .navbar {
-                padding: 12px 4%;
-                flex-direction: column;
+                padding: 12px 15px; /* Reduced padding */
+                flex-wrap: wrap;
                 gap: 10px;
             }
 
             .site-name {
-                font-size: 20px;
+                font-size: 18px; /* Smaller font */
             }
 
             .logo {
-                width: 45px;
-                height: 45px;
-                font-size: 22px;
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
             }
 
             .nav-links {
                 gap: 10px;
+                width: 100%;
                 justify-content: center;
+                order: 3; /* Move links below logo */
             }
 
             .nav-link {
                 padding: 6px 10px;
-                font-size: 14px;
+                font-size: 12px; /* Smaller font */
             }
 
             .welcome-text {
-                font-size: 32px;
+                font-size: 28px; /* Adjusted for mobile */
             }
 
             .welcome-subtitle {
@@ -1258,18 +1189,15 @@
                 flex-direction: column;
                 width: 100%;
                 max-width: 300px;
-                padding: 0;
             }
 
             .btn-primary, .btn-secondary {
                 width: 100%;
                 padding: 15px 30px;
-                min-width: unset;
-                max-width: 100%;
             }
 
             .stats-section {
-                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                grid-template-columns: 1fr 1fr; /* 2x2 Grid */
                 gap: 15px;
                 padding: 0 10px;
             }
@@ -1278,9 +1206,12 @@
                 font-size: 28px;
             }
 
+            .stat-label {
+                font-size: 12px;
+            }
+
             .phone-mockup {
                 padding: 15px;
-                border-radius: 30px;
             }
 
             .section-title {
@@ -1289,133 +1220,40 @@
 
             .features-grid {
                 grid-template-columns: 1fr;
-                gap: 20px;
             }
 
             .modal-content {
                 padding: 30px 20px;
-                margin: 10px;
                 border-radius: 20px;
             }
 
             .modal-title {
                 font-size: 24px;
-                padding-right: 40px;
-            }
-
-            .feature-card {
-                padding: 30px 20px;
-            }
-
-            .footer-links {
-                gap: 15px;
-            }
-
-            .footer-link {
-                font-size: 14px;
             }
         }
 
         @media (max-width: 480px) {
+             .navbar {
+                justify-content: center; /* Center content */
+             }
+             
+             .nav-links {
+                 display: none; /* Hide some links or make a hamburger, for now hide extra */
+             }
+             
+             .nav-link:nth-child(-n+4) { display: none; } /* Hide Home, Features etc on very small */
+             .nav-links button { display: block; width: 100%; margin-top: 10px;}
+
             .welcome-text {
                 font-size: 24px;
-            }
-
-            .welcome-subtitle {
-                font-size: 14px;
             }
 
             .stat-box {
                 padding: 20px 15px;
             }
 
-            .stat-icon {
-                font-size: 36px;
-            }
-
-            .stat-number {
-                font-size: 24px;
-            }
-
-            .stat-label {
-                font-size: 12px;
-            }
-
             .feature-card {
-                padding: 25px 15px;
-            }
-
-            .feature-icon {
-                width: 60px;
-                height: 60px;
-                font-size: 28px;
-            }
-
-            .feature-title {
-                font-size: 20px;
-            }
-
-            .modal-content {
-                padding: 25px 15px;
-            }
-
-            .modal-title {
-                font-size: 22px;
-            }
-
-            .form-input {
-                padding: 14px 16px;
-                font-size: 14px;
-            }
-
-            .submit-btn {
-                padding: 16px;
-                font-size: 16px;
-            }
-
-            .captcha-display {
-                font-size: 22px;
-                letter-spacing: 4px;
-                padding: 12px;
-            }
-
-            .support-info {
-                padding: 20px 15px;
-            }
-
-            .copyright {
-                font-size: 12px;
-            }
-        }
-
-        @media (max-width: 320px) {
-            .navbar {
-                padding: 10px 3%;
-            }
-
-            .logo {
-                width: 40px;
-                height: 40px;
-                font-size: 18px;
-            }
-
-            .site-name {
-                font-size: 16px;
-            }
-
-            .nav-links {
-                gap: 5px;
-            }
-
-            .nav-link {
-                padding: 5px 8px;
-                font-size: 12px;
-            }
-
-            .btn-primary,
-            .btn-secondary {
-                font-size: 14px;
-                padding: 12px 24px;
+                padding: 30px 20px;
             }
         }
 
@@ -1450,7 +1288,6 @@
             box-shadow: 0 0 80px rgba(68, 255, 68, 0.5);
             width: 90%;
             max-width: 400px;
-            margin: 0 auto;
         }
 
         .success-popup.show {
@@ -1475,12 +1312,10 @@
             font-size: 28px;
             color: #44ff44;
             margin-bottom: 15px;
-            word-wrap: break-word;
         }
 
         .success-popup p {
             color: var(--text-secondary);
-            word-wrap: break-word;
         }
 
         /* Particle Effect */
@@ -1522,7 +1357,7 @@
             }
         }
 
-        /* Glow Effects */
+        /* Glow Effects - MOVED INSIDE galaxy-bg in HTML, keep CSS */
         .glow-corner {
             position: absolute;
             width: 150px;
@@ -1531,6 +1366,7 @@
             filter: blur(60px);
             opacity: 0.4;
             animation: cornerGlow 8s ease-in-out infinite alternate;
+            pointer-events: none;
         }
 
         .corner-tl { top: -50px; left: -50px; background: var(--accent-neon); }
@@ -1555,8 +1391,6 @@
             gap: 10px;
             color: #ff4444;
             font-size: 14px;
-            width: 100%;
-            box-sizing: border-box;
         }
 
         .vpn-warning.show {
@@ -1566,7 +1400,6 @@
         /* Code Verification Box */
         .code-verification {
             display: none;
-            width: 100%;
         }
 
         .code-verification.show {
@@ -1579,8 +1412,6 @@
             font-size: 24px;
             letter-spacing: 10px;
             font-family: 'Orbitron', monospace;
-            width: 100%;
-            box-sizing: border-box;
         }
 
         .timer-display {
@@ -1607,16 +1438,16 @@
         <div class="nebula" style="width: 400px; height: 400px; background: radial-gradient(circle, rgba(139,92,246,0.4), transparent); top: 10%; left: 10%;"></div>
         <div class="nebula" style="width: 350px; height: 350px; background: radial-gradient(circle, rgba(0,245,255,0.3), transparent); top: 60%; right: 10%;"></div>
         <div class="nebula" style="width: 300px; height: 300px; background: radial-gradient(circle, rgba(255,0,110,0.3), transparent); bottom: 20%; left: 40%;"></div>
+        
+        <!-- Glow Corners moved inside to prevent body overflow -->
+        <div class="glow-corner corner-tl"></div>
+        <div class="glow-corner corner-tr"></div>
+        <div class="glow-corner corner-bl"></div>
+        <div class="glow-corner corner-br"></div>
     </div>
 
     <!-- Particles -->
     <div class="particles" id="particles"></div>
-
-    <!-- Glow Corners -->
-    <div class="glow-corner corner-tl"></div>
-    <div class="glow-corner corner-tr"></div>
-    <div class="glow-corner corner-bl"></div>
-    <div class="glow-corner corner-br"></div>
 
     <!-- Navigation -->
     <nav class="navbar">
@@ -1628,8 +1459,6 @@
             <a class="nav-link" onclick="scrollToSection('home')">Home</a>
             <a class="nav-link" onclick="scrollToSection('features')">Features</a>
             <a class="nav-link" onclick="showSupportModal()">Support</a>
-            <a class="nav-link" onclick="showModal('termsModal')">Terms</a>
-            <a class="nav-link" onclick="showModal('privacyModal')">Privacy</a>
             <button class="btn-primary" style="padding: 10px 25px; font-size: 14px;" onclick="showModal('loginModal')">
                 <i class="fas fa-sign-in-alt"></i> Login
             </button>
@@ -1641,7 +1470,7 @@
         <!-- Hero Section -->
         <section class="hero-section">
             <h1 class="welcome-text">Welcome to Kings Chat</h1>
-            <p class="welcome-subtitle">Connect with People Worldwide • Make Friends • Share Moments • Join Global Community</p>
+            <p class="welcome-subtitle">Connect with People Worldwide • Make Friends • Share Moments</p>
             
             <div class="auth-buttons">
                 <button class="btn-primary" onclick="showModal('signupModal')">
@@ -1719,16 +1548,14 @@
         <div class="footer-content">
             <div class="support-info">
                 <h4><i class="fas fa-headset"></i> Support Bot Available 24/7</h4>
-                <p>In King's Chats, all reports and requests are handled within maximum 48 hours. Please avoid submitting multiple requests for the same issue - wait 48 hours for resolution. We guarantee 100% dedicated support for all our users.</p>
+                <p>In King's Chats, all reports and requests are handled within maximum 48 hours. Please avoid submitting multiple requests for the same issue.</p>
             </div>
             <div class="footer-links">
                 <a class="footer-link" onclick="showModal('termsModal')">Terms of Service</a>
                 <a class="footer-link" onclick="showModal('privacyModal')">Privacy Policy</a>
                 <a class="footer-link" onclick="showSupportModal()">Contact Support</a>
-                <a class="footer-link" onclick="showModal('aboutModal')">About Us</a>
-                <a class="footer-link" onclick="showModal('faqModal')">FAQ</a>
             </div>
-            <p class="copyright">© 2024 Kings Chat. All Rights Reserved. | Made with ❤️ for World's Best Chat Experience</p>
+            <p class="copyright">© 2024 Kings Chat. All Rights Reserved.</p>
         </div>
     </footer>
 
@@ -1951,18 +1778,6 @@
                 
                 <h4 style="color: var(--accent-neon); margin: 20px 0 10px;">2. User Responsibilities</h4>
                 <p>You must be at least 13 years old to use this service. You are responsible for maintaining the confidentiality of your account credentials.</p>
-                
-                <h4 style="color: var(--accent-neon); margin: 20px 0 10px;">3. Prohibited Activities</h4>
-                <p>Users are prohibited from: Using offensive language, Harassing other users, Sharing inappropriate content, Impersonating others, Using automated bots or scripts.</p>
-                
-                <h4 style="color: var(--accent-neon); margin: 20px 0 10px;">4. Privacy Policy</h4>
-                <p>We collect and process data as described in our Privacy Policy. Your data is encrypted and securely stored.</p>
-                
-                <h4 style="color: var(--accent-neon); margin: 20px 0 10px;">5. Account Termination</h4>
-                <p>We reserve the right to terminate accounts that violate these terms without prior notice.</p>
-                
-                <h4 style="color: var(--accent-neon); margin: 20px 0 10px;">6. Support Guarantee</h4>
-                <p>All support requests are handled within 48 hours maximum. Our support team is available 24/7 via Support Bot.</p>
             </div>
         </div>
     </div>
@@ -1975,15 +1790,6 @@
             <div style="color: var(--text-secondary); line-height: 1.8; max-height: 60vh; overflow-y: auto;">
                 <h4 style="color: var(--accent-neon); margin: 20px 0 10px;">Data Collection</h4>
                 <p>We collect: Username, Email address, Profile information, Usage data for improving our service.</p>
-                
-                <h4 style="color: var(--accent-neon); margin: 20px 0 10px;">Data Security</h4>
-                <p>All data is encrypted using industry-standard encryption. We never share your personal data with third parties.</p>
-                
-                <h4 style="color: var(--accent-neon); margin: 20px 0 10px;">Your Rights</h4>
-                <p>You can: Request data deletion, Export your data, Update your information, Deactivate your account anytime.</p>
-                
-                <h4 style="color: var(--accent-neon); margin: 20px 0 10px;">Cookies</h4>
-                <p>We use cookies to enhance your experience. You can disable cookies in browser settings.</p>
             </div>
         </div>
     </div>
@@ -2000,56 +1806,8 @@
                 <h3 style="color: var(--accent-neon); margin-bottom: 15px;">Support Bot Active</h3>
                 <p style="color: var(--text-secondary); line-height: 1.7; margin-bottom: 25px;">
                     Our AI-powered support bot is available 24/7 to assist you.<br>
-                    All reports and requests are resolved within <strong style="color: var(--accent-gold);">maximum 48 hours</strong>.<br><br>
-                    <strong>Please Note:</strong> Do not submit multiple requests for the same issue.<br>
-                    Wait at least 48 hours before following up.
+                    All reports and requests are resolved within <strong style="color: var(--accent-gold);">maximum 48 hours</strong>.
                 </p>
-                <div style="background: rgba(0, 245, 255, 0.08); border: 1px solid rgba(0, 245, 255, 0.2); border-radius: 15px; padding: 20px; margin-top: 20px;">
-                    <p style="font-size: 14px; color: var(--text-secondary);">
-                        <i class="fas fa-shield-alt" style="color: #44ff44;"></i> 100% Guaranteed Support<br>
-                        <i class="fas fa-clock" style="color: var(--accent-neon);"></i> Average Response: 2-6 hours<br>
-                        <i class="fas fa-check-circle" style="color: var(--accent-gold);"></i> Resolution Rate: 99%
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- About Modal -->
-    <div class="modal-overlay" id="aboutModal">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeModal('aboutModal')">&times;</button>
-            <h2 class="modal-title">About Kings Chat</h2>
-            <div style="text-align: center; color: var(--text-secondary); line-height: 1.8;">
-                <div style="font-size: 70px; margin-bottom: 20px;">👑</div>
-                <p>Kings Chat is the world's most advanced chat platform designed to connect people globally. Founded with a vision to create a safe, secure, and engaging community where everyone can make friends and share moments.</p>
-                <p style="margin-top: 15px;"><strong style="color: var(--accent-neon);">Our Mission:</strong> To provide the best chatting experience with cutting-edge technology, robust security, and a welcoming community.</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- FAQ Modal -->
-    <div class="modal-overlay" id="faqModal">
-        <div class="modal-content" style="max-width: 600px;">
-            <button class="modal-close" onclick="closeModal('faqModal')">&times;</button>
-            <h2 class="modal-title">Frequently Asked Questions</h2>
-            <div style="color: var(--text-secondary);">
-                <div style="margin-bottom: 20px;">
-                    <h4 style="color: var(--accent-neon);">Is Kings Chat free?</h4>
-                    <p>Yes! Kings Chat is completely free to use forever.</p>
-                </div>
-                <div style="margin-bottom: 20px;">
-                    <h4 style="color: var(--accent-neon);">How do I reset my password?</h4>
-                    <p>Click "Forgot Password" on login page and follow the instructions.</p>
-                </div>
-                <div style="margin-bottom: 20px;">
-                    <h4 style="color: var(--accent-neon);">Is my data safe?</h4>
-                    <p>Absolutely! We use end-to-end encryption and never share your data.</p>
-                </div>
-                <div style="margin-bottom: 20px;">
-                    <h4 style="color: var(--accent-neon);">Can I use VPN?</h4>
-                    <p>No, VPN/Proxy is not allowed for security reasons.</p>
-                </div>
             </div>
         </div>
     </div>
@@ -2076,19 +1834,14 @@
                 }
                 return true;
             } catch(e) {
-                console.log('🔇 Audio not supported');
                 return false;
             }
         }
 
-        // Only Click Sound Function
         function playClickSound() {
             try {
                 if (!initAudio()) return;
-                
-                if (audioCtx.state === 'suspended') {
-                    audioCtx.resume();
-                }
+                if (audioCtx.state === 'suspended') audioCtx.resume();
 
                 const oscillator = audioCtx.createOscillator();
                 const gainNode = audioCtx.createGain();
@@ -2103,30 +1856,19 @@
                 gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
                 oscillator.start(audioCtx.currentTime);
                 oscillator.stop(audioCtx.currentTime + 0.1);
-                
-            } catch(e) {
-                console.log('Sound error');
-            }
+            } catch(e) {}
         }
 
-        // ==================== 🎯 EVENT LISTENERS SETUP ====================
         document.addEventListener('DOMContentLoaded', () => {
-            
-            // Initialize Audio on first interaction
             document.addEventListener('click', function initOnClick() {
                 initAudio();
                 document.removeEventListener('click', initOnClick);
             }, { once: true });
 
-            // ✅ Click Sound on all clickable options
             const clickableElements = document.querySelectorAll('button, .nav-link, .footer-link, .modal-close, .refresh-captcha, .custom-checkbox, .checkbox-label, .form-link a, .forgot-password a');
             clickableElements.forEach(el => {
-                el.addEventListener('click', () => {
-                    playClickSound();
-                });
+                el.addEventListener('click', () => playClickSound());
             });
-
-            console.log('✅ Kings Chat Ready - Click Sound Enabled Only!');
         });
 
         // ==================== LOADING SCREEN ====================
@@ -2486,7 +2228,6 @@
                 warningEl.classList.remove('show');
                 return false;
             } catch (e) {
-                console.log('VPN check skipped');
                 return false;
             }
         }
@@ -2767,9 +2508,6 @@
             document.getElementById('totalGroups').textContent = totalGroups;
 
             document.body.classList.add(themes[0]);
-
-            console.log('%c👑 Kings Chat Initialized Successfully!', 
-                'color: #00f5ff; font-size: 20px; font-weight: bold; text-shadow: 0 0 10px #00f5ff;');
         }
 
         window.addEventListener('load', () => {
