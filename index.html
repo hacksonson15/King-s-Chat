@@ -921,33 +921,34 @@
             text-align: center;
         }
 
-        .captcha-display {
-            font-size: 28px;
-            font-weight: 700;
-            letter-spacing: 8px;
+              .captcha-display {
+            font-size: 32px;
+            font-weight: 900;
+            letter-spacing: 12px;
             color: var(--accent-neon);
-            background: rgba(0, 0, 0, 0.3);
-            padding: 15px;
-            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 18px 25px;
+            border-radius: 12px;
             margin-bottom: 15px;
             user-select: none;
-            font-family: 'Courier New', monospace;
-            text-decoration: line-through;
-            text-decoration-color: rgba(255, 0, 110, 0.5);
+            font-family: 'Orbitron', monospace;
+            text-shadow: 0 0 10px rgba(0, 245, 255, 0.6), 2px 2px 0px rgba(139, 92, 246, 0.5);
+            border: 1px solid rgba(0, 245, 255, 0.3);
+            display: inline-block;
         }
-
-        .refresh-captcha {
+               .refresh-captcha {
             background: none;
             border: none;
             color: var(--accent-neon);
             cursor: pointer;
             font-size: 20px;
-            transition: transform 0.3s ease;
-            will-change: transform;
+            transition: color 0.3s ease, transform 0.2s ease;
+            will-change: color;
         }
 
         .refresh-captcha:hover {
-            transform: rotate(180deg) translateZ(0);
+            color: var(--accent-pink);
+            transform: scale(1.2) translateZ(0);
         }
 
         /* Checkbox Styles */
