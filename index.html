@@ -704,48 +704,48 @@
         }
 
         /* Modal Styles - Optimized */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            padding: 15px;
-            overflow-y: auto;
-            contain: strict;
-            will-change: opacity;
-        }
+           .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        display: none;
+        justify-content: center;
+        align-items: flex-start;
+        z-index: 2000;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        padding: 15px;
+        overflow-y: auto;
+        will-change: opacity;
+    }
 
         .modal-overlay.active {
             display: flex;
             opacity: 1;
         }
 
-        .modal-content {
-            background: linear-gradient(145deg, #1a1a4e, #0a0a2e);
-            border: 2px solid rgba(0, 245, 255, 0.3);
-            border-radius: 30px;
-            padding: 50px;
-            width: 100%;
-            max-width: 480px;
-            position: relative;
-            box-shadow: 0 0 60px rgba(0, 245, 255, 0.3);
-            animation: modalSlideIn 0.4s ease;
-            max-height: 90vh;
-            overflow-y: auto;
-            margin: auto;
-            will-change: transform, opacity;
-            transform: translateZ(0);
-        }
+            .modal-content {
+        background: linear-gradient(145deg, #1a1a4e, #0a0a2e);
+        border: 2px solid rgba(0, 245, 255, 0.3);
+        border-radius: 30px;
+        padding: 50px;
+        width: 100%;
+        max-width: 480px;
+        position: relative;
+        box-shadow: 0 0 60px rgba(0, 245, 255, 0.3);
+        animation: modalSlideIn 0.4s ease;
+        max-height: 90vh;
+        overflow-y: auto;
+        margin: 10vh auto 20px auto;
+        flex-shrink: 0;
+        will-change: transform, opacity;
+        transform: translateZ(0);
+    }
 
         @keyframes modalSlideIn {
             from {
@@ -1287,9 +1287,10 @@
                 grid-template-columns: 1fr;
             }
 
-            .modal-content {
+                        .modal-content {
                 padding: 30px 20px;
                 border-radius: 20px;
+                margin: 5vh auto 10px auto;
             }
 
             .modal-title {
@@ -2116,30 +2117,34 @@
 
         // ==================== MODAL FUNCTIONS ====================
         function showModal(modalId) {
-            const modal = document.getElementById(modalId);
-            modal.classList.add('active');
-            document.body.style.overflow = 'hidden';
+    const modal = document.getElementById(modalId);
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+    modal.scrollTop = 0;
+    modal.classList.add('active');
 
-            if (modalId === 'signupModal') generateCaptcha();
-            if (modalId === 'loginModal') generateLoginCaptcha();
+    if (modalId === 'signupModal') generateCaptcha();
+    if (modalId === 'loginModal') generateLoginCaptcha();
 
-            if (modalId === 'signupModal' || modalId === 'loginModal') {
-                checkVPN(modalId);
-            }
-        }
-
+    if (modalId === 'signupModal' || modalId === 'loginModal') {
+        checkVPN(modalId);
+    }
+}
         function closeModal(modalId) {
-            const modal = document.getElementById(modalId);
-            modal.classList.remove('active');
-            document.body.style.overflow = '';
-        }
+    const modal = document.getElementById(modalId);
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+    document.documentElement.style.overflow = '';
+}
 
         // Event delegation for modals
-        document.querySelectorAll('.modal-overlay').forEach(modal => {
+                document.querySelectorAll('.modal-overlay').forEach(modal => {
             modal.addEventListener('click', (e) => {
                 if (e.target === modal) {
                     modal.classList.remove('active');
                     document.body.style.overflow = '';
+                    document.documentElement.style.overflow = '';
                 }
             });
         });
@@ -2619,11 +2624,12 @@
         });
 
         // Keyboard shortcut optimization
-        document.addEventListener('keydown', (e) => {
+                document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 document.querySelectorAll('.modal-overlay.active').forEach(modal => {
                     modal.classList.remove('active');
                     document.body.style.overflow = '';
+                    document.documentElement.style.overflow = '';
                 });
             }
         });
