@@ -39,12 +39,11 @@
             position: relative !important;
         }
 
-        body {
+                body {
             font-family: 'Poppins', sans-serif;
             background: var(--primary-galaxy);
             color: var(--text-primary);
             position: relative;
-            contain: layout style paint;
         }
 
         /* GPU Acceleration Hints */
@@ -55,7 +54,7 @@
         }
 
         /* Galaxy Background Animation - Optimized */
-        .galaxy-bg {
+                .galaxy-bg {
             position: fixed;
             top: 0;
             left: 0;
@@ -63,16 +62,14 @@
             height: 100%;
             z-index: -1;
             overflow: hidden;
-            contain: strict;
             pointer-events: none;
         }
 
-        .stars {
+                .stars {
             position: absolute;
             width: 100%;
             height: 100%;
             background: transparent;
-            contain: strict;
         }
 
         .star {
@@ -291,7 +288,7 @@
             align-items: center;
         }
 
-        .nav-link {
+                .nav-link {
             color: var(--text-secondary);
             text-decoration: none;
             font-weight: 500;
@@ -300,7 +297,6 @@
             padding: 8px 15px;
             border-radius: 8px;
             position: relative;
-            will-change: transform, color;
         }
 
         .nav-link:hover {
@@ -385,7 +381,7 @@
             justify-content: center;
         }
 
-        .btn-primary, .btn-secondary {
+                .btn-primary, .btn-secondary {
             padding: 18px 45px;
             font-size: 18px;
             font-weight: 600;
@@ -397,8 +393,6 @@
             overflow: hidden;
             text-transform: uppercase;
             letter-spacing: 1px;
-            will-change: transform, box-shadow;
-            transform: translateZ(0);
         }
 
         .btn-primary {
@@ -436,10 +430,8 @@
             contain: layout style;
         }
 
-        .stat-box {
+                .stat-box {
             background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
             border: 1px solid rgba(0, 245, 255, 0.2);
             border-radius: 20px;
             padding: 35px 25px;
@@ -640,10 +632,8 @@
             contain: layout style;
         }
 
-        .feature-card {
+               .feature-card {
             background: rgba(255, 255, 255, 0.04);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
             border: 1px solid rgba(0, 245, 255, 0.15);
             border-radius: 25px;
             padding: 40px 30px;
@@ -814,7 +804,7 @@
             font-size: 14px;
         }
 
-        .form-input {
+                .form-input {
             width: 100%;
             padding: 16px 20px;
             background: rgba(255, 255, 255, 0.05);
@@ -824,7 +814,6 @@
             font-size: 16px;
             transition: all 0.3s ease;
             font-family: 'Poppins', sans-serif;
-            will-change: border-color, box-shadow;
         }
 
         .form-input:focus {
@@ -1394,7 +1383,7 @@
         }
 
         /* Particle Effect - Optimized with reduced count */
-        .particles {
+                .particles {
             position: fixed;
             top: 0;
             left: 0;
@@ -1403,7 +1392,6 @@
             pointer-events: none;
             z-index: -1;
             overflow: hidden;
-            contain: strict;
         }
 
         .particle {
@@ -1958,15 +1946,14 @@
         const loadingPercentage = document.getElementById('loadingPercentage');
         let loadingAnimationId = null;
 
-        function simulateLoading() {
+             function simulateLoading() {
             if (loadingProgress < 100) {
-                loadingProgress += Math.random() * 5 + 2; // Faster loading
+                loadingProgress += Math.random() * 15 + 10; // Super Fast loading
                 if (loadingProgress > 100) loadingProgress = 100;
                 loadingPercentage.textContent = Math.floor(loadingProgress) + '%';
                 
-                // Use requestAnimationFrame for smoother updates
                 loadingAnimationId = requestAnimationFrame(() => {
-                    setTimeout(simulateLoading, 30); // Reduced delay
+                    setTimeout(simulateLoading, 50);
                 });
                        } else {
                 cancelAnimationFrame(loadingAnimationId);
@@ -1980,10 +1967,10 @@
         }
 
         // ==================== OPTIMIZED GALAXY BACKGROUND ====================
-        function createStars() {
+                function createStars() {
             const container = document.getElementById('starsContainer');
             const fragment = document.createDocumentFragment();
-            const starCount = 150; // Reduced from 200 for better performance
+            const starCount = 50; // Super optimized for zero lag
             
             for (let i = 0; i < starCount; i++) {
                 const star = document.createElement('div');
@@ -2001,10 +1988,10 @@
             container.appendChild(fragment);
         }
 
-        function createParticles() {
+                       function createParticles() {
             const container = document.getElementById('particles');
             const fragment = document.createDocumentFragment();
-            const particleCount = 20; // Reduced from 30 for better performance
+            const particleCount = 8; // Super optimized
             
             for (let i = 0; i < particleCount; i++) {
                 const particle = document.createElement('div');
@@ -2612,14 +2599,16 @@
             }, 2500); // Slightly faster
         }
 
-        // ==================== OPTIMIZED INITIALIZATION ====================
+                // ==================== OPTIMIZED INITIALIZATION ====================
         function initializeApp() {
             createStars();
             createParticles();
-            startChatDemoLoop();
+            
+            // Delay heavy loops so page feels instantly smooth
+            setTimeout(() => startChatDemoLoop(), 2000);
 
             // Use longer interval for counters
-            counterInterval = setInterval(updateLiveCounters, 6000);
+            counterInterval = setInterval(updateLiveCounters, 10000);
 
             document.getElementById('totalMembers').textContent = totalMembers;
             document.getElementById('totalGroups').textContent = totalGroups;
