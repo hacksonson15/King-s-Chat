@@ -24,13 +24,19 @@
             --text-secondary: #b4b4b4;
         }
 
-        /* Performance Optimizations */
+               /* Performance Optimizations */
         html, body {
             max-width: 100vw;
             overflow-x: hidden;
             touch-action: pan-y;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+        }
+
+        html.no-scroll, html.no-scroll body {
+            overflow: hidden !important;
+            height: 100% !important;
+            position: relative !important;
         }
 
         body {
@@ -1961,12 +1967,14 @@
                 loadingAnimationId = requestAnimationFrame(() => {
                     setTimeout(simulateLoading, 30); // Reduced delay
                 });
-            } else {
+                       } else {
                 cancelAnimationFrame(loadingAnimationId);
                 setTimeout(() => {
+                    window.scrollTo(0, 0);
                     loadingScreen.classList.add('hidden');
+                    document.documentElement.classList.remove('no-scroll');
                     initializeApp();
-                }, 300); // Reduced delay
+                }, 300);
             }
         }
 
@@ -2618,8 +2626,10 @@
             document.body.classList.add(themes[0]);
         }
 
-        // Start loading immediately
+                // Start loading immediately
         window.addEventListener('load', () => {
+            window.scrollTo(0, 0);
+            document.documentElement.classList.add('no-scroll');
             simulateLoading();
         });
 
