@@ -2198,7 +2198,11 @@
             'contact', 'help', 'bot', 'kingschat', 'kings_chat'
         ];
 
-        function validateUsername(input) {
+              function validateUsername(input) {
+            // Auto replace spaces with underscores
+            if (input.value.includes(' ')) {
+                input.value = input.value.replace(/ /g, '_');
+            }
             const value = input.value.toLowerCase().trim();
             const errorEl = document.getElementById('usernameError');
 
