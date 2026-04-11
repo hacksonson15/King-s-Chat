@@ -1532,150 +1532,6 @@
             pointer-events: none;
         }
         .copy-toast.show {
-            /* ===== CHAT ROOM PAGE ===== */
-.chat-page {
-    display: none;
-    min-height: 100vh;
-    padding: 0;
-    flex-direction: column;
-}
-.chat-page.active {
-    display: flex;
-    animation: fadeInUp 0.4s ease;
-}
-.chat-room-header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    padding: 15px 20px;
-    background: rgba(10,10,46,0.98);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(0,245,255,0.2);
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    z-index: 100;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-}
-.chat-room-info {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
-}
-.chat-room-title {
-    font-size: 18px;
-    font-weight: 700;
-    color: white;
-}
-.chat-messages-area {
-    flex: 1;
-    margin-top: 75px;
-    margin-bottom: 70px;
-    padding: 20px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    max-width: 700px;
-    width: 100%;
-    margin-left: auto;
-    margin-right: auto;
-}
-.chat-system-msg {
-    text-align: center;
-    font-size: 13px;
-    color: var(--accent-gold);
-    background: rgba(255,215,0,0.08);
-    border: 1px solid rgba(255,215,0,0.15);
-    border-radius: 10px;
-    padding: 10px 20px;
-    align-self: center;
-    max-width: 90%;
-}
-.chat-bubble {
-    max-width: 80%;
-    padding: 12px 16px;
-    border-radius: 16px;
-    animation: fadeInUp 0.3s ease;
-    word-wrap: break-word;
-}
-.chat-bubble-mine {
-    align-self: flex-end;
-    background: linear-gradient(135deg, var(--accent-neon), var(--accent-purple));
-    color: white;
-    border-bottom-right-radius: 4px;
-}
-.chat-bubble-other {
-    align-self: flex-start;
-    background: rgba(255,255,255,0.08);
-    border: 1px solid rgba(255,255,255,0.1);
-    color: white;
-    border-bottom-left-radius: 4px;
-}
-.chat-bubble-sender {
-    font-size: 12px;
-    font-weight: 700;
-    margin-bottom: 4px;
-    color: var(--accent-neon);
-}
-.chat-bubble-time {
-    font-size: 10px;
-    opacity: 0.6;
-    margin-top: 5px;
-    text-align: right;
-}
-.chat-input-area {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 15px 20px;
-    background: rgba(10,10,46,0.98);
-    backdrop-filter: blur(10px);
-    border-top: 1px solid rgba(0,245,255,0.2);
-    display: flex;
-    gap: 10px;
-    z-index: 100;
-    box-shadow: 0 -4px 20px rgba(0,0,0,0.3);
-}
-.chat-message-input {
-    flex: 1;
-    padding: 14px 20px;
-    background: rgba(255,255,255,0.06);
-    border: 2px solid rgba(0,245,255,0.2);
-    border-radius: 25px;
-    color: white;
-    font-size: 15px;
-    font-family: 'Poppins', sans-serif;
-    outline: none;
-    transition: border-color 0.3s ease;
-}
-.chat-message-input:focus {
-    border-color: var(--accent-neon);
-    box-shadow: 0 0 15px rgba(0,245,255,0.2);
-}
-.chat-send-btn {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--accent-neon), var(--accent-purple));
-    border: none;
-    color: white;
-    font-size: 18px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-    flex-shrink: 0;
-}
-.chat-send-btn:hover {
-    transform: scale(1.1);
-    box-shadow: 0 5px 20px rgba(0,245,255,0.4);
-}
             transform: translateX(-50%) translateY(0);
         }
         
@@ -2107,9 +1963,6 @@
                     <button class="room-copy-btn" onclick="copyInviteLink(this,'https://kingschat.github.io/r/1')"><i class="fas fa-copy"></i> Copy</button>
                 </div>
                 <button class="room-enter-btn" onclick="showRoomDetail()">
-                    <button class="room-join-btn" onclick="openChatRoom()" style="margin-top:12px;">
-    <i class="fas fa-comments"></i> Join Chat
-</button>
                     View Details <i class="fas fa-chevron-right"></i>
                 </button>
             </div>
@@ -2118,26 +1971,6 @@
 
     <!-- Room Detail Page -->
     <div class="room-detail-page" id="roomDetailPage">
-        <!-- Chat Room Page -->
-<div class="chat-page" id="chatPage">
-    <div class="chat-room-header">
-        <button class="rooms-back-btn" onclick="backToRoomsFromChat()"><i class="fas fa-arrow-left"></i></button>
-        <div class="chat-room-info">
-            <span class="chat-room-title"><i class="fas fa-globe"></i> Global Room</span>
-            <span class="room-detail-online" style="font-size:12px;padding:3px 10px;">
-                <span class="online-dot"></span>
-                <span id="chatOnlineCount">0</span> Online
-            </span>
-        </div>
-    </div>
-    <div class="chat-messages-area" id="chatMessagesArea">
-        <div class="chat-system-msg">Welcome to Global Room! Be respectful and follow the rules.</div>
-    </div>
-    <div class="chat-input-area">
-        <input type="text" class="chat-message-input" id="chatMessageInput" placeholder="Type a message..." maxlength="500" onkeydown="if(event.key==='Enter')sendChatMessage()">
-        <button class="chat-send-btn" onclick="sendChatMessage()"><i class="fas fa-paper-plane"></i></button>
-    </div>
-</div>
         <div class="room-detail-header">
             <button class="rooms-back-btn" onclick="backToRooms()"><i class="fas fa-arrow-left"></i></button>
             <div class="room-detail-name-row">
@@ -2165,6 +1998,7 @@
                 </ul>
                 <div class="room-rules-note"><i class="fas fa-exclamation-triangle"></i> Note: Failure to follow these rules may result in a temporary kick or a permanent ban by the moderators. Enjoy your stay at King Chat, Global Room!</div>
             </div>
+            <button class="room-join-btn" onclick="joinRoom()"><i class="fas fa-sign-in-alt"></i> Join Global Room</button>
         </div>
     </div>
 
@@ -2900,7 +2734,6 @@
 
         // ==================== LOGIN ATTEMPT TRACKING ====================
         let loginAttempts = 0;
-        localStorage.setItem('kc_last_username', username);
         let lockEndTime = null;
         let lockTimerInterval = null;
 
@@ -3054,7 +2887,6 @@
                 showRoomsPage();
 
                 totalMembers++;
-                localStorage.setItem('kc_last_username', username);
                 animateCounter('totalMembers', totalMembers);
 
                 document.getElementById('signupForm').reset();
@@ -3173,32 +3005,22 @@
         let roomOnlineInterval = null;
 
         function showRoomsPage() {
-    document.getElementById('home').style.display = 'none';
-    document.getElementById('roomsPage').classList.add('active');
-    document.getElementById('roomDetailPage').classList.remove('active');
-    document.getElementById('chatPage').classList.remove('active');
-    document.body.style.overflow = '';
-    window.scrollTo({ top: 0, behavior: 'instant' });
-    startRoomOnlineCounter();
-    updateNavbarForLoggedIn();
-}
+            document.getElementById('home').style.display = 'none';
+            document.getElementById('roomsPage').classList.add('active');
+            document.getElementById('roomDetailPage').classList.remove('active');
+            window.scrollTo({ top: 0, behavior: 'instant' });
+            startRoomOnlineCounter();
+            updateNavbarForLoggedIn();
+        }
 
         function goHome() {
-    let users = JSON.parse(localStorage.getItem('kc_online_users') || '{}');
-    delete users[myUserId];
-    localStorage.setItem('kc_online_users', JSON.stringify(users));
-    roomChannel.postMessage({ type: 'leave', userId: myUserId });
-
-    document.getElementById('roomsPage').classList.remove('active');
-    document.getElementById('roomDetailPage').classList.remove('active');
-    document.getElementById('chatPage').classList.remove('active');
-    document.getElementById('home').style.display = '';
-    document.body.style.overflow = '';
-    window.scrollTo({ top: 0, behavior: 'instant' });
-    if (roomOnlineInterval) clearInterval(roomOnlineInterval);
-    if (window.chatOnlineInterval) clearInterval(window.chatOnlineInterval);
-    updateNavbarForLoggedOut();
-}
+            document.getElementById('roomsPage').classList.remove('active');
+            document.getElementById('roomDetailPage').classList.remove('active');
+            document.getElementById('home').style.display = '';
+            window.scrollTo({ top: 0, behavior: 'instant' });
+            if (roomOnlineInterval) clearInterval(roomOnlineInterval);
+            updateNavbarForLoggedOut();
+        }
 
         function updateNavbarForLoggedIn() {
             document.querySelector('.nav-links').innerHTML = `
@@ -3222,16 +3044,9 @@
         }
 
         function handleLogout() {
-    if (document.getElementById('chatPage').classList.contains('active')) {
-        let msgs = JSON.parse(localStorage.getItem('kc_chat_messages') || '[]');
-        msgs.push({ type: 'system', text: chatUsername + ' left the room', time: Date.now() });
-        if (msgs.length > 200) msgs = msgs.slice(-200);
-        localStorage.setItem('kc_chat_messages', JSON.stringify(msgs));
-        roomChannel.postMessage({ type: 'new_message' });
-    }
-    goHome();
-    showSuccessPopup('Logged Out', 'You have been logged out');
-}
+            goHome();
+            showSuccessPopup('Logged Out', 'You have been logged out');
+        }
 
         function showRoomDetail() {
             document.getElementById('roomsPage').classList.remove('active');
@@ -3245,173 +3060,20 @@
             window.scrollTo({ top: 0, behavior: 'instant' });
         }
 
-        // Real-time online counter - localStorage + BroadcastChannel
-const roomChannel = new BroadcastChannel('kingschat_room');
-let myUserId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
-
-function startRoomOnlineCounter() {
-    let onlineUsers = JSON.parse(localStorage.getItem('kc_online_users') || '{}');
-    onlineUsers[myUserId] = Date.now();
-    localStorage.setItem('kc_online_users', JSON.stringify(onlineUsers));
-    roomChannel.postMessage({ type: 'join', userId: myUserId });
-    updateOnlineDisplay();
-
-    roomOnlineInterval = setInterval(() => {
-        let users = JSON.parse(localStorage.getItem('kc_online_users') || '{}');
-        users[myUserId] = Date.now();
-        localStorage.setItem('kc_online_users', JSON.stringify(users));
-
-        const now = Date.now();
-        let changed = false;
-        for (let uid in users) {
-            if (now - users[uid] > 15000) {
-                delete users[uid];
-                changed = true;
+        function startRoomOnlineCounter() {
+            let count = 150 + Math.floor(Math.random() * 50);
+            function update() {
+                count += Math.floor(Math.random() * 5) - 2;
+                if (count < 100) count = 100 + Math.floor(Math.random() * 20);
+                if (count > 300) count = 280 + Math.floor(Math.random() * 20);
+                document.getElementById('globalRoomOnline').textContent = count;
+                document.getElementById('detailOnlineCount').textContent = count;
             }
+            update();
+            roomOnlineInterval = setInterval(update, 5000);
         }
-        if (changed) localStorage.setItem('kc_online_users', JSON.stringify(users));
-        updateOnlineDisplay();
-    }, 5000);
-}
-
-function updateOnlineDisplay() {
-    let users = JSON.parse(localStorage.getItem('kc_online_users') || '{}');
-    const count = Object.keys(users).length;
-    const el1 = document.getElementById('globalRoomOnline');
-    const el2 = document.getElementById('detailOnlineCount');
-    if (el1) el1.textContent = count;
-    if (el2) el2.textContent = count;
-}
-
-roomChannel.onmessage = function(e) {
-    if (e.data.type === 'join' || e.data.type === 'leave') {
-        updateOnlineDisplay();
-        if (typeof updateChatOnlineCount === 'function') updateChatOnlineCount();
-    }
-    if (e.data.type === 'new_message') {
-        if (typeof renderChatMessages === 'function') renderChatMessages();
-    }
-};
-
-// Tab band hone par ya offline hone par remove ho
-window.addEventListener('beforeunload', () => {
-    let users = JSON.parse(localStorage.getItem('kc_online_users') || '{}');
-    delete users[myUserId];
-    localStorage.setItem('kc_online_users', JSON.stringify(users));
-    roomChannel.postMessage({ type: 'leave', userId: myUserId });
-});
-
-document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'hidden') {
-        let users = JSON.parse(localStorage.getItem('kc_online_users') || '{}');
-        delete users[myUserId];
-        localStorage.setItem('kc_online_users', JSON.stringify(users));
-        roomChannel.postMessage({ type: 'leave', userId: myUserId });
-    } else if (document.getElementById('roomsPage').classList.contains('active') || document.getElementById('chatPage').classList.contains('active')) {
-        let users = JSON.parse(localStorage.getItem('kc_online_users') || '{}');
-        users[myUserId] = Date.now();
-        localStorage.setItem('kc_online_users', JSON.stringify(users));
-        roomChannel.postMessage({ type: 'join', userId: myUserId });
-        updateOnlineDisplay();
-    }
-});
 
         function copyInviteLink(btn, link) {
-            // ==================== CHAT ROOM SYSTEM ====================
-let chatUsername = '';
-
-function openChatRoom() {
-    chatUsername = localStorage.getItem('kc_last_username') || 'User_' + myUserId.substr(0, 6);
-
-    document.getElementById('roomsPage').classList.remove('active');
-    document.getElementById('roomDetailPage').classList.remove('active');
-    document.getElementById('chatPage').classList.add('active');
-    document.body.style.overflow = 'hidden';
-
-    // Join system message
-    const sysMsg = { type: 'system', text: chatUsername + ' joined the room', time: Date.now() };
-    let msgs = JSON.parse(localStorage.getItem('kc_chat_messages') || '[]');
-    msgs.push(sysMsg);
-    if (msgs.length > 200) msgs = msgs.slice(-200);
-    localStorage.setItem('kc_chat_messages', JSON.stringify(msgs));
-    roomChannel.postMessage({ type: 'new_message' });
-    renderChatMessages();
-    updateChatOnlineCount();
-
-    if (window.chatOnlineInterval) clearInterval(window.chatOnlineInterval);
-    window.chatOnlineInterval = setInterval(updateChatOnlineCount, 5000);
-}
-
-function backToRoomsFromChat() {
-    const sysMsg = { type: 'system', text: chatUsername + ' left the room', time: Date.now() };
-    let msgs = JSON.parse(localStorage.getItem('kc_chat_messages') || '[]');
-    msgs.push(sysMsg);
-    if (msgs.length > 200) msgs = msgs.slice(-200);
-    localStorage.setItem('kc_chat_messages', JSON.stringify(msgs));
-    roomChannel.postMessage({ type: 'new_message' });
-
-    document.getElementById('chatPage').classList.remove('active');
-    document.getElementById('roomsPage').classList.add('active');
-    document.body.style.overflow = '';
-
-    if (window.chatOnlineInterval) clearInterval(window.chatOnlineInterval);
-}
-
-function updateChatOnlineCount() {
-    let users = JSON.parse(localStorage.getItem('kc_online_users') || '{}');
-    const el = document.getElementById('chatOnlineCount');
-    if (el) el.textContent = Object.keys(users).length;
-}
-
-function sendChatMessage() {
-    const input = document.getElementById('chatMessageInput');
-    const text = input.value.trim();
-    if (!text) return;
-
-    const msg = { type: 'user', sender: chatUsername, senderId: myUserId, text: text, time: Date.now() };
-    let msgs = JSON.parse(localStorage.getItem('kc_chat_messages') || '[]');
-    msgs.push(msg);
-    if (msgs.length > 200) msgs = msgs.slice(-200);
-    localStorage.setItem('kc_chat_messages', JSON.stringify(msgs));
-    roomChannel.postMessage({ type: 'new_message' });
-
-    input.value = '';
-    renderChatMessages();
-    playClickSound();
-}
-
-function renderChatMessages() {
-    const area = document.getElementById('chatMessagesArea');
-    if (!area) return;
-    const msgs = JSON.parse(localStorage.getItem('kc_chat_messages') || '[]');
-    const last50 = msgs.slice(-50);
-
-    area.innerHTML = '';
-    last50.forEach(msg => {
-        if (msg.type === 'system') {
-            const div = document.createElement('div');
-            div.className = 'chat-system-msg';
-            div.textContent = msg.text;
-            area.appendChild(div);
-        } else {
-            const isMine = msg.senderId === myUserId;
-            const div = document.createElement('div');
-            div.className = 'chat-bubble ' + (isMine ? 'chat-bubble-mine' : 'chat-bubble-other');
-            const timeStr = new Date(msg.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            div.innerHTML = (!isMine ? '<div class="chat-bubble-sender">' + escapeHtml(msg.sender) + '</div>' : '') +
-                '<div>' + escapeHtml(msg.text) + '</div>' +
-                '<div class="chat-bubble-time">' + timeStr + '</div>';
-            area.appendChild(div);
-        }
-    });
-    area.scrollTop = area.scrollHeight;
-}
-
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-}
             navigator.clipboard.writeText(link).then(() => {
                 btn.classList.add('copied');
                 btn.innerHTML = '<i class="fas fa-check"></i> Copied';
@@ -3439,6 +3101,9 @@ function escapeHtml(text) {
             });
         }
 
+        function joinRoom() {
+            showSuccessPopup('Joining Room', 'Connecting to Global Room...');
+        }
         
                 // ==================== OPTIMIZED INITIALIZATION ====================
         function initializeApp() {
