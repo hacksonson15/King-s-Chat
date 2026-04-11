@@ -2486,6 +2486,42 @@
             } catch(e) {}
         }
 
+                // ==================== APPWRITE CONFIG ====================
+        const APPWRITE_CONFIG = {
+            endpoint: 'https://fra.cloud.appwrite.io/v1',
+            projectId: '69d0d42100068cd0ec14',
+            databaseId: '69d0d52b001be54a3e6a',
+            activeUsersColId: 'room_active_users',
+            messagesColId: 'room_messages'   
+        };
+
+        let appwriteClient = null;
+        let appwriteDb = null;
+        let myUserId = localStorage.getItem('kc_userId') || null;
+        let myUsername = localStorage.getItem('kc_username') || '';
+        let isCurrentlyInRoom = false;
+        let myActiveUserDocId = null;
+        let messagesUnsubscribe = null;
+        let activeUsersUnsubscribe = null;
+        let onlineUpdateInterval = null;
+
+        function initAppwrite() {
+            try {
+                appwriteClient = new Appwrite.Client();
+                appwriteClient.setEndpoint(APPWRITE_CONFIG.endpoint).setProject(APPWRITE_CONFIG.projectId);
+                appwriteDb = new Appwrite.Databases(appwriteClient);
+
+                if (!myUserId) {
+                    myUserId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                    localStorage.setItem('kc_userId', myUserId);
+                }
+                return true;
+            } catch (e) {
+                console.error('Appwrite init failed:', e);
+                return false;
+            }
+        }
+
         // ==================== PERFORMANCE OPTIMIZED EVENT LISTENERS ====================
         document.addEventListener('DOMContentLoaded', () => {
             document.addEventListener('click', function initOnClick() {
@@ -2951,10 +2987,11 @@
                 const btn = document.getElementById('loginBtn');
                 btn.classList.add('loading');
 
-                setTimeout(() => {
+                                setTimeout(() => {
                     document.getElementById('loginSuccess').classList.remove('show');
                     btn.classList.remove('loading');
-                                        closeModal('loginModal');
+                    localStorage.setItem('kc_username', username);
+                    closeModal('loginModal');
                     showRoomsPage();
                 }, 1500);
             }
@@ -3050,8 +3087,10 @@
                                 closeModal('signupModal');
                 showRoomsPage();
 
-                totalMembers++;
+                                totalMembers++;
                 animateCounter('totalMembers', totalMembers);
+
+                localStorage.setItem('kc_username', username);
 
                 document.getElementById('signupForm').reset();
                 document.getElementById('strengthBar').className = 'strength-bar';
@@ -3168,27 +3207,35 @@
                 // ==================== FEATURE ROOMS SYSTEM ====================
         let roomOnlineInterval = null;
 
-        function showRoomsPage() {
+               function showRoomsPage() {
             document.getElementById('home').style.display = 'none';
             document.getElementById('roomsPage').classList.add('active');
             document.getElementById('roomDetailPage').classList.remove('active');
+            document.getElementById('chatPage').classList.remove('active');
             window.scrollTo({ top: 0, behavior: 'instant' });
+            if (activeUsersUnsubscribe) { try { activeUsersUnsubscribe(); } catch(e){} activeUsersUnsubscribe = null; }
             startRoomOnlineCounter();
             updateNavbarForLoggedIn();
         }
 
-        function goHome() {
+                function goHome() {
+            if (isCurrentlyInRoom) leaveChatRoom();
             document.getElementById('roomsPage').classList.remove('active');
             document.getElementById('roomDetailPage').classList.remove('active');
+            document.getElementById('chatPage').classList.remove('active');
             document.getElementById('home').style.display = '';
             window.scrollTo({ top: 0, behavior: 'instant' });
             if (roomOnlineInterval) clearInterval(roomOnlineInterval);
+            if (activeUsersUnsubscribe) { try { activeUsersUnsubscribe(); } catch(e){} activeUsersUnsubscribe = null; }
             updateNavbarForLoggedOut();
         }
 
-        function updateNavbarForLoggedIn() {
+                function updateNavbarForLoggedIn() {
             document.querySelector('.nav-links').innerHTML = `
                 <a class="nav-link" onclick="showRoomsPage()"><i class="fas fa-door-open"></i> Rooms</a>
+                <button class="btn-primary" style="padding:10px 25px;font-size:14px;" onclick="joinRoom()">
+                    <i class="fas fa-comments"></i> Join Chat
+                </button>
                 <a class="nav-link" onclick="showSupportModal()">Support</a>
                 <button class="btn-secondary" style="padding:10px 25px;font-size:14px;border-color:var(--accent-pink);color:var(--accent-pink);" onclick="handleLogout()">
                     <i class="fas fa-sign-out-alt"></i> Logout
@@ -3207,7 +3254,9 @@
             `;
         }
 
-        function handleLogout() {
+                function handleLogout() {
+            if (isCurrentlyInRoom) leaveChatRoom();
+            localStorage.removeItem('kc_username');
             goHome();
             showSuccessPopup('Logged Out', 'You have been logged out');
         }
@@ -3224,18 +3273,64 @@
             window.scrollTo({ top: 0, behavior: 'instant' });
         }
 
-        function startRoomOnlineCounter() {
+                async function startRoomOnlineCounter() {
+            if (!appwriteDb) {
+                fallbackOnlineCounter();
+                return;
+            }
+            try {
+                const result = await appwriteDb.listDocuments(
+                    APPWRITE_CONFIG.databaseId,
+                    APPWRITE_CONFIG.activeUsersColId,
+                    [Appwrite.Query.equal('roomId', 'global')]
+                );
+                const count = result.total;
+                updateOnlineDisplay(count);
+
+                activeUsersUnsubscribe = appwriteClient.subscribe(
+                    'databases.' + APPWRITE_CONFIG.databaseId + '.collections.' + APPWRITE_CONFIG.activeUsersColId + '.documents',
+                    (response) => {
+                        refreshOnlineCount();
+                    }
+                );
+            } catch (e) {
+                console.error('Realtime online count failed, using fallback:', e);
+                fallbackOnlineCounter();
+            }
+        }
+
+        async function refreshOnlineCount() {
+            try {
+                const result = await appwriteDb.listDocuments(
+                    APPWRITE_CONFIG.databaseId,
+                    APPWRITE_CONFIG.activeUsersColId,
+                    [Appwrite.Query.equal('roomId', 'global')]
+                );
+                updateOnlineDisplay(result.total);
+            } catch (e) {}
+        }
+
+        function updateOnlineDisplay(count) {
+            const el1 = document.getElementById('globalRoomOnline');
+            const el2 = document.getElementById('detailOnlineCount');
+            const el3 = document.getElementById('chatOnlineCount');
+            if (el1) el1.textContent = count;
+            if (el2) el2.textContent = count;
+            if (el3) el3.textContent = count;
+        }
+
+        function fallbackOnlineCounter() {
             let count = 150 + Math.floor(Math.random() * 50);
             function update() {
                 count += Math.floor(Math.random() * 5) - 2;
                 if (count < 100) count = 100 + Math.floor(Math.random() * 20);
                 if (count > 300) count = 280 + Math.floor(Math.random() * 20);
-                document.getElementById('globalRoomOnline').textContent = count;
-                document.getElementById('detailOnlineCount').textContent = count;
+                updateOnlineDisplay(count);
             }
             update();
             roomOnlineInterval = setInterval(update, 5000);
         }
+
 
         function copyInviteLink(btn, link) {
             navigator.clipboard.writeText(link).then(() => {
@@ -3265,12 +3360,226 @@
             });
         }
 
-        function joinRoom() {
-            showSuccessPopup('Joining Room', 'Connecting to Global Room...');
+             async function joinRoom() {
+            if (!appwriteDb) {
+                showSuccessPopup('Error', 'Database not connected. Check Appwrite config.');
+                return;
+            }
+            if (!myUsername) {
+                showSuccessPopup('Error', 'Please login first.');
+                goHome();
+                return;
+            }
+            if (isCurrentlyInRoom) return;
+
+            isCurrentlyInRoom = true;
+            document.getElementById('chatPage').classList.add('active');
+            document.getElementById('chatJoiningOverlay').style.display = 'flex';
+            document.getElementById('chatMessagesArea').innerHTML = '';
+
+            try {
+                // Pehle purana doc delete karo agar koi bache hue ho
+                try {
+                    const existing = await appwriteDb.listDocuments(
+                        APPWRITE_CONFIG.databaseId,
+                        APPWRITE_CONFIG.activeUsersColId,
+                        [
+                            Appwrite.Query.equal('userId', myUserId),
+                            Appwrite.Query.equal('roomId', 'global')
+                        ]
+                    );
+                    for (const doc of existing.documents) {
+                        await appwriteDb.deleteDocument(APPWRITE_CONFIG.databaseId, APPWRITE_CONFIG.activeUsersColId, doc.$id);
+                    }
+                } catch (e) {}
+
+                // Naya active user doc banao
+                const doc = await appwriteDb.createDocument(
+                    APPWRITE_CONFIG.databaseId,
+                    APPWRITE_CONFIG.activeUsersColId,
+                    Appwrite.ID.unique(),
+                    {
+                        userId: myUserId,
+                        username: myUsername,
+                        roomId: 'global',
+                        joinedAt: new Date().toISOString()
+                    },
+                    [
+                        Appwrite.Permission.read('any'),
+                        Appwrite.Permission.write('any')
+                    ]
+                );
+                myActiveUserDocId = doc.$id;
+
+                // Online count update karo
+                await refreshOnlineCount();
+
+                // Pichle 50 messages load karo
+                await loadInitialMessages();
+
+                // Real-time messages subscribe karo
+                subscribeToMessages();
+
+                // System message
+                addSystemMessage(myUsername + ' joined the room');
+
+                // Har 5 sec me online count refresh
+                onlineUpdateInterval = setInterval(refreshOnlineCount, 5000);
+
+                document.getElementById('chatJoiningOverlay').style.display = 'none';
+                document.getElementById('chatInput').focus();
+
+            } catch (e) {
+                console.error('Join room failed:', e);
+                document.getElementById('chatJoiningOverlay').style.display = 'none';
+                document.getElementById('chatPage').classList.remove('active');
+                isCurrentlyInRoom = false;
+                showSuccessPopup('Error', 'Failed to join room. Try again.');
+            }
         }
+
+        async function leaveChatRoom() {
+            isCurrentlyInRoom = false;
+
+            // Unsubscribe karo
+            if (messagesUnsubscribe) { try { messagesUnsubscribe(); } catch(e){} messagesUnsubscribe = null; }
+            if (activeUsersUnsubscribe) { try { activeUsersUnsubscribe(); } catch(e){} activeUsersUnsubscribe = null; }
+            if (onlineUpdateInterval) { clearInterval(onlineUpdateInterval); onlineUpdateInterval = null; }
+
+            // Active user doc delete karo
+            if (myActiveUserDocId && appwriteDb) {
+                try {
+                    await appwriteDb.deleteDocument(APPWRITE_CONFIG.databaseId, APPWRITE_CONFIG.activeUsersColId, myActiveUserDocId);
+                } catch (e) {}
+                myActiveUserDocId = null;
+            }
+
+            // Online count refresh
+            await refreshOnlineCount();
+
+            // Chat page hide karo, rooms page dikhao
+            document.getElementById('chatPage').classList.remove('active');
+            document.getElementById('roomsPage').classList.add('active');
+            document.getElementById('roomDetailPage').classList.remove('active');
+            document.getElementById('chatMessagesArea').innerHTML = '';
+            document.getElementById('chatInput').value = '';
+        }
+
+        async function loadInitialMessages() {
+            try {
+                const result = await appwriteDb.listDocuments(
+                    APPWRITE_CONFIG.databaseId,
+                    APPWRITE_CONFIG.messagesColId,
+                    [
+                        Appwrite.Query.equal('roomId', 'global'),
+                        Appwrite.Query.orderDesc('$createdAt'),
+                        Appwrite.Query.limit(50)
+                    ]
+                );
+                const messages = result.documents.reverse();
+                const area = document.getElementById('chatMessagesArea');
+                area.innerHTML = '';
+                for (const msg of messages) {
+                    renderChatMessage(msg, false);
+                }
+                area.scrollTop = area.scrollHeight;
+            } catch (e) {
+                console.error('Load messages failed:', e);
+            }
+        }
+
+        function subscribeToMessages() {
+            if (messagesUnsubscribe) { try { messagesUnsubscribe(); } catch(e){} }
+
+            messagesUnsubscribe = appwriteClient.subscribe(
+                'databases.' + APPWRITE_CONFIG.databaseId + '.collections.' + APPWRITE_CONFIG.messagesColId + '.documents',
+                (response) => {
+                    if (response.events.includes('databases.*.collections.*.documents.*.create')) {
+                        const msg = response.payload;
+                        if (msg.roomId === 'global') {
+                            // Agar apni message hai to skip (woh already render ho chuki hai)
+                            if (msg.senderId === myUserId) return;
+                            renderChatMessage(msg, true);
+                        }
+                    }
+                }
+            );
+        }
+
+        function renderChatMessage(msg, animate) {
+            const area = document.getElementById('chatMessagesArea');
+            const isSelf = msg.senderId === myUserId;
+
+            const div = document.createElement('div');
+            div.className = 'chat-msg ' + (isSelf ? 'chat-msg-self' : 'chat-msg-other');
+            if (!animate) div.style.animation = 'none';
+
+            const time = new Date(msg.sentAt || msg.$createdAt);
+            const timeStr = time.getHours().toString().padStart(2,'0') + ':' + time.getMinutes().toString().padStart(2,'0');
+
+            div.innerHTML = `
+                <div class="chat-msg-sender">${escapeHtml(msg.senderName)}</div>
+                <div class="chat-msg-text">${escapeHtml(msg.message)}</div>
+                <div class="chat-msg-time">${timeStr}</div>
+            `;
+            area.appendChild(div);
+            area.scrollTop = area.scrollHeight;
+        }
+
+        function addSystemMessage(text) {
+            const area = document.getElementById('chatMessagesArea');
+            const div = document.createElement('div');
+            div.className = 'chat-system-msg';
+            div.textContent = text;
+            area.appendChild(div);
+            area.scrollTop = area.scrollHeight;
+        }
+
+        async function sendChatMessage() {
+            const input = document.getElementById('chatInput');
+            const text = input.value.trim();
+            if (!text) return;
+
+            input.value = '';
+            document.getElementById('chatSendBtn').disabled = true;
+
+            try {
+                await appwriteDb.createDocument(
+                    APPWRITE_CONFIG.databaseId,
+                    APPWRITE_CONFIG.messagesColId,
+                    Appwrite.ID.unique(),
+                    {
+                        senderId: myUserId,
+                        senderName: myUsername,
+                        roomId: 'global',
+                        message: text,
+                        sentAt: new Date().toISOString()
+                    },
+                    [
+                        Appwrite.Permission.read('any'),
+                        Appwrite.Permission.write('any')
+                    ]
+                );
+            } catch (e) {
+                console.error('Send message failed:', e);
+                addSystemMessage('Failed to send message. Try again.');
+                input.value = text;
+            }
+
+            document.getElementById('chatSendBtn').disabled = false;
+            input.focus();
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
         
                 // ==================== OPTIMIZED INITIALIZATION ====================
-        function initializeApp() {
+                function initializeApp() {
+            initAppwrite();
             createStars();
             createParticles();
             
@@ -3305,14 +3614,19 @@
         });
 
         // Cleanup on page unload
-        window.addEventListener('beforeunload', () => {
+                window.addEventListener('beforeunload', () => {
             if (counterInterval) clearInterval(counterInterval);
             if (themeInterval) clearInterval(themeInterval);
             if (lockTimerInterval) clearInterval(lockTimerInterval);
             if (codeTimerInterval) clearInterval(codeTimerInterval);
             if (chatAnimationTimeout) clearTimeout(chatAnimationTimeout);
             if (roomOnlineInterval) clearInterval(roomOnlineInterval);
+            if (onlineUpdateInterval) clearInterval(onlineUpdateInterval);
             if (loadingAnimationId) cancelAnimationFrame(loadingAnimationId);
+            // Room se niklo (active user doc delete)
+            if (myActiveUserDocId && appwriteDb) {
+                appwriteDb.deleteDocument(APPWRITE_CONFIG.databaseId, APPWRITE_CONFIG.activeUsersColId, myActiveUserDocId).catch(()=>{});
+            }
         });
     </script>
 </body>
