@@ -6,7 +6,7 @@
     <title>Kings Chat - Connect Worldwide</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-        <script src="https://cdn.jsdelivr.net/npm/appwrite/dist/appwrite.min.js" defer></script>
+        <script src="https://unpkg.com/appwrite@15.0.0/dist/appwrite.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -2494,7 +2494,7 @@
             activeUsersColId: 'room_active_users',
             messagesColId: 'room_messages'   
         };
-
+let appwriteReady = false;
         let appwriteClient = null;
         let appwriteDb = null;
         let myUserId = localStorage.getItem('kc_userId') || null;
@@ -2505,12 +2505,11 @@
         let activeUsersUnsubscribe = null;
         let onlineUpdateInterval = null;
 
-                function initAppwrite() {
+                       function initAppwrite() {
             try {
                 if (typeof Appwrite === 'undefined') {
-                    console.warn('Appwrite SDK not loaded yet, retrying in 1s...');
-                    setTimeout(initAppwrite, 1000);
-                    return false;
+                    setTimeout(initAppwrite, 500);
+                    return;
                 }
                 appwriteClient = new Appwrite.Client();
                 appwriteClient.setEndpoint(APPWRITE_CONFIG.endpoint).setProject(APPWRITE_CONFIG.projectId);
@@ -2520,12 +2519,11 @@
                     myUserId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
                     localStorage.setItem('kc_userId', myUserId);
                 }
-                console.log('Appwrite connected successfully!');
-                return true;
+                appwriteReady = true;
+                console.log('Appwrite connected!');
             } catch (e) {
                 console.error('Appwrite init failed:', e);
-                setTimeout(initAppwrite, 2000);
-                return false;
+                setTimeout(initAppwrite, 1000);
             }
         }
 
@@ -3281,7 +3279,7 @@
         }
 
                 async function startRoomOnlineCounter() {
-            if (!appwriteDb) {
+                        if (!appwriteReady) {
                 fallbackOnlineCounter();
                 return;
             }
@@ -3368,8 +3366,9 @@
         }
 
              async function joinRoom() {
-            if (!appwriteDb) {
-                showSuccessPopup('Error', 'Database not connected. Check Appwrite config.');
+                        if (!appwriteReady) {
+                showSuccessPopup('Please Wait', 'Connecting to server...');
+                setTimeout(joinRoom, 2000);
                 return;
             }
             if (!myUsername) {
