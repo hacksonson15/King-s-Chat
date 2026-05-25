@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProChat Application</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/appwrite@14.0.0"></script>
+</head>
+<body class="bg-gray-900 text-white font-sans h-screen flex flex-col justify-between">
+
+    <div id="auth-modal" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
+        <div class="bg-gray-800 p-8 rounded-2xl shadow-2xl max-w-sm w-full border border-gray-700 mx-4">
+            <h2 class="text-2xl font-bold mb-2 text-center text-indigo-400">Welcome to ProChat</h2>
+            <p class="text-gray-400 text-sm text-center mb-6">Enter a display name to join the chatroom.</p>
+            <input type="text" id="username-input" placeholder="Your Username..." 
+                class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 mb-4">
+            <button onclick="joinChat()" 
+                class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold p-3 rounded-lg transition duration-200 shadow-lg shadow-indigo-600/30">
+                Join Chat
+            </button>
+        </div>
+    </div>
+
+    <header class="bg-gray-800 border-b border-gray-700 p-4 flex justify-between items-center shadow-md">
+        <div class="flex items-center space-x-3">
+            <div class="h-3 w-3 bg-green-500 rounded-full animate-pulse"></div>
+            <h1 class="text-xl font-bold tracking-wide">ProChat <span class="text-xs text-indigo-400 font-mono">v1.0</span></h1>
+        </div>
+        <div class="flex items-center space-x-4">
+            <span id="user-display" class="text-sm bg-gray-700 px-3 py-1 rounded-full text-gray-300 font-medium"></span>
+            <button onclick="logout()" class="text-xs text-red-400 hover:text-red-300 transition">Leave</button>
+        </div>
+    </header>
+
+    <main id="chat-window" class="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-950 scrollbar-thin scrollbar-thumb-gray-800">
+        <div id="loading-fallback" class="text-center text-gray-500 my-10 animate-pulse">Connecting to Appwrite streams...</div>
+    </main>
+
+    <footer class="bg-gray-800 p-4 border-t border-gray-700">
+        <form id="chat-form" onsubmit="sendMessage(event)" class="flex max-w-5xl mx-auto space-x-3">
+            <input type="text" id="message-input" autocomplete="off" placeholder="Type a secure message..." 
+                class="flex-1 bg-gray-700 border border-gray-600 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
+            <button type="submit" 
+                class="bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-3 rounded-xl font-medium transition duration-200 flex items-center justify-center shadow-lg shadow-indigo-600/20">
+                Send
+            </button>
+        </form>
+    </footer>
+
+    <script>
+        // --- CONFIGURATION ---
+        const PROJECT_ID = '6a14212c00327bbb4ba5';
+        const DATABASE_ID = '6a14215a0009380c1370';
+        const ENDPOINT = 'https://fra.cloud.appwrite.io/v1';
+        
+        // ⚠️ PASTE YOUR RECENTLY CREATED COLLECTION ID HERE:
+        const COLLECTION_ID = 'YOUR_COLLECTION_ID_HERE'; 
+
+        // --- INITIALIZE APPWRITE ---
+        const { Client, Databases, ID, Account } = Appwrite;
+        const client = new Client().setEndpoint(ENDPOINT).setProject(PROJECT_ID);
+        const databases = new Databases(client);
+        const account = new Account(client);
+
+        let currentUser = localStorage.getItem('chat_username') || '';
+
+        // Elements
+        const authModal = document.getElementById('auth-modal');
+        const usernameInput = document.getElementById('username-input');
+        const userDisplay = document.getElementById('user-display');
+        const chatWindow = document.getElementById('chat-window');
+        const messageInput = document.getElementById('message-input');
+
+        // --- APP INITIALIZATION ---
+        window.onload = async () => {
+            if (currentUser) {
+                initChatSession();
+            } else {
+                authModal.classList.remove('hidden');
+            }
+        };
+
+        async function joinChat() {
+            const name = usernameInput.value.trim();
+            if (!name) return alert('Please enter a valid username');
+            
+            currentUser = name;
+            localStorage.setItem('chat_username', currentUser);
+            
+            // Authenticate anonymously in Appwrite to allow DB writes safely if required
+            try {
+                await account.createAnonymousSession();
+            } catch (err) {
+                console.log("Session already active or anonymous access granted.");
+            }
+
+            initChatSession();
+        }
+
+        function initChatSession() {
+            authModal.classList.add('hidden');
+            userDisplay.innerText = `@${currentUser}`;
+            document.getElementById('loading-fallback').remove();
+            
+            // Load Historical Messages
+            loadMessages();
+            
+            // Subscribe to Realtime Updates
+            client.subscribe(`databases.${DATABASE_ID}.collections.${COLLECTION_ID}.documents`, response => {
+                // If a new document is created, render it instantly
+                if (response.events.includes("databases.*.collections.*.documents.*.create")) {
+                    renderMessage(response.payload);
+                }
+            });
+        }
+
+        // --- FETCH MESSAGES ---
+        async function loadMessages() {
+            try {
+                const response = await databases.listDocuments(DATABASE_ID, COLLECTION_ID);
+                chatWindow.innerHTML = ''; // Clear chat window
+                // Appwrite limits payload, reverse array if you want chronological timeline
+                response.documents.forEach(doc => {
+                    renderMessage(doc);
+                });
+            } catch (error) {
+                console.error("Error loading documents:", error);
+                chatWindow.innerHTML = `<div class="text-red-400 text-center p-4">Failed to load chat history. Check Collection ID configuration.</div>`;
+            }
+        }
+
+        // --- SEND MESSAGE ---
+        async function sendMessage(e) {
+            e.preventDefault();
+            const text = messageInput.value.trim();
+            if (!text) return;
+
+            messageInput.value = ''; // Instantly clear input for snappy UI
+
+            try {
+                await databases.createDocument(
+                    DATABASE_ID, 
+                    COLLECTION_ID, 
+                    ID.unique(), 
+                    {
+                        username: currentUser,
+                        text: text
+                    }
+                );
+            } catch (error) {
+                console.error("Error sending message:", error);
+                alert("Failed to deliver message.");
+            }
+        }
+
+        // --- RENDER MESSAGE BULLET ---
+        function renderMessage(doc) {
+            const isMe = doc.username === currentUser;
+            
+            const msgWrapper = document.createElement('div');
+            msgWrapper.className = `flex flex-col ${isMe ? 'items-end' : 'items-start'} space-y-1 max-w-[85%] ${isMe ? 'ml-auto' : 'mr-auto'}`;
+
+            msgWrapper.innerHTML = `
+                <span class="text-xs text-gray-400 font-mono ${isMe ? 'text-indigo-300' : ''}">${doc.username}</span>
+                <div class="p-3 rounded-2xl text-sm break-all shadow-md ${isMe ? 'bg-indigo-600 text-white rounded-tr-none' : 'bg-gray-800 text-gray-200 rounded-tl-none'}">
+                    ${escapeHTML(doc.text)}
+                </div>
+            `;
+            
+            chatWindow.appendChild(msgWrapper);
+            chatWindow.scrollTop = chatWindow.scrollHeight; // Auto-scroll down
+        }
+
+        // --- AUXILIARY FUNCTIONS ---
+        function logout() {
+            localStorage.removeItem('chat_username');
+            window.location.reload();
+        }
+
+        function escapeHTML(str) {
+            return str.replace(/[&<>'"]/g, 
+                tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+            );
+        }
+    </script>
+</body>
+</html>
