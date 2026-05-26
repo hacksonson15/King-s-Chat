@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - ChatHub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="auth-page">
+    <!-- ============================================ -->
+    <!-- SIGNUP.HTML - Registration Page             -->
+    <!-- New user account creation form              -->
+    <!-- ============================================ -->
+    
+    <div class="auth-container">
+        <div class="auth-box auth-box-large">
+            <div class="auth-header">
+                <h1><i class="fas fa-user-plus"></i> Create Account</h1>
+                <p>Join ChatHub and start chatting!</p>
+            </div>
+
+            <!-- Progress Steps -->
+            <div class="progress-steps">
+                <div class="step active" id="step1">
+                    <span class="step-number">1</span>
+                    <span class="step-label">Info</span>
+                </div>
+                <div class="step-line"></div>
+                <div class="step" id="step2">
+                    <span class="step-number">2</span>
+                    <span class="step-label">Account</span>
+                </div>
+                <div class="step-line"></div>
+                <div class="step" id="step3">
+                    <span class="step-number">3</span>
+                    <span class="step-label">Done</span>
+                </div>
+            </div>
+
+            <div id="signupAlert" class="alert"></div>
+
+            <!-- Step 1: Personal Info -->
+            <form onsubmit="handleSignup(event)" id="signupForm">
+                <div id="formStep1">
+                    <div class="form-group">
+                        <label for="signupName">
+                            <i class="fas fa-user"></i> Full Name
+                        </label>
+                        <input type="text" id="signupName" placeholder="Enter your full name" required minlength="2" maxlength="100" autocomplete="name">
+                        <small class="form-hint">This is how others will see you</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="signupEmail">
+                            <i class="fas fa-envelope"></i> Email Address
+                        </label>
+                        <input type="email" id="signupEmail" placeholder="Enter your email address" required autocomplete="email">
+                    </div>
+
+                    <button type="button" class="btn-primary" onclick="nextStep(2)">
+                        Next: Create Password <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+
+                <!-- Step 2: Password -->
+                <div id="formStep2" style="display: none;">
+                    <div class="form-group">
+                        <label for="signupPassword">
+                            <i class="fas fa-lock"></i> Create Password
+                        </label>
+                        <div class="password-wrapper">
+                            <input type="password" id="signupPassword" placeholder="Create a strong password" required minlength="8" oninput="checkPasswordStrength(this.value)">
+                            <button type="button" class="toggle-password" onclick="togglePasswordVisibility('signupPassword', this)">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        
+                        <!-- Password Strength Indicator -->
+                        <div class="password-strength" id="passwordStrength">
+                            <div class="strength-bar" id="strengthBar"></div>
+                            <span class="strength-text" id="strengthText">Enter password</span>
+                        </div>
+                        <ul class="password-requirements">
+                            <li id="req-length"><i class="fas fa-times"></i> At least 8 characters</li>
+                            <li id="req-upper"><i class="fas fa-times"></i> One uppercase letter</li>
+                            <li id="req-lower"><i class="fas fa-times"></i> One lowercase letter</li>
+                            <li id="req-number"><i class="fas fa-times"></i> One number</li>
+                        </ul>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirmPassword">
+                            <i class="fas fa-lock"></i> Confirm Password
+                        </label>
+                        <input type="password" id="confirmPassword" placeholder="Confirm your password" required oninput="checkPasswordMatch()">
+                        <small class="form-hint error-hint" id="matchHint" style="display: none;">Passwords don't match</small>
+                    </div>
+
+                    <div class="form-buttons-row">
+                        <button type="button" class="btn-secondary" onclick="nextStep(1)">
+                            <i class="fas fa-arrow-left"></i> Back
+                        </button>
+                        <button type="submit" class="btn-primary" id="signupBtn">
+                            <i class="fas fa-rocket"></i> Create Account
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Step 3: Success (Hidden by default) -->
+            <div id="successMessage" style="display: none; text-align: center; padding: 30px;">
+                <div class="success-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h2>Account Created! 🎉</h2>
+                <p>Your ChatHub account has been created successfully.</p>
+                <a href="login.html" class="btn-primary btn-large" style="margin-top: 20px;">
+                    <i class="fas fa-sign-in-alt"></i> Go to Login
+                </a>
+            </div>
+
+            <div class="divider">
+                <span>OR</span>
+            </div>
+
+            <div class="social-login">
+                <button class="btn-social btn-google" onclick="handleGoogleLogin()">
+                    <i class="fab fa-google"></i> Sign up with Google
+                </button>
+            </div>
+
+            <div class="auth-footer">
+                <p>Already have an account? <a href="login.html">Sign in here</a></p>
+                <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to Home</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <!-- Appwrite SDK -->
+    <script src="https://cdn.appwrite.io/sdk/v2/client.js"></script>
+    
+    <!-- Core Configuration -->
+    <script src="config.js"></script>
+    
+    <!-- Auth Functions -->
+    <script src="auth.js"></script>
+
+    <script>
+        // Signup page specific logic
+        document.addEventListener('DOMContentLoaded', () => {
+            checkSession();
+        });
+
+        function nextStep(step) {
+            // Validate current step before proceeding
+            if (step === 2) {
+                const name = document.getElementById('signupName').value;
+                const email = document.getElementById('signupEmail').value;
+                
+                if (!name || !email) {
+                    showAlert('signupAlert', 'Please fill in all fields', 'error');
+                    return;
+                }
+                
+                if (!isValidEmail(email)) {
+                    showAlert('signupAlert', 'Please enter a valid email address', 'error');
+                    return;
+                }
+            }
+
+            // Update steps UI
+            document.querySelectorAll('.step').forEach((s, i) => {
+                s.classList.toggle('active', i + 1 <= step);
+                s.classList.toggle('completed', i + 1 < step);
+            });
+
+            // Show/hide forms
+            document.getElementById('formStep1').style.display = step === 1 ? 'block' : 'none';
+            document.getElementById('formStep2').style.display = step === 2 ? 'block' : 'none';
+        }
+
+        function checkPasswordStrength(password) {
+            let strength = 0;
+            
+            if (password.length >= 8) strength++;
+            if (/[A-Z]/.test(password)) strength++;
+            if (/[a-z]/.test(password)) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            if (/[^A-Za-z0-9]/.test(password)) strength++;
+
+            const bar = document.getElementById('strengthBar');
+            const text = document.getElementById('strengthText');
+
+            bar.className = 'strength-bar';
+            
+            if (strength <= 2) {
+                bar.style.width = '33%';
+                bar.classList.add('weak');
+                text.textContent = 'Weak password';
+            } else if (strength <= 3) {
+                bar.style.width = '66%';
+                bar.classList.add('medium');
+                text.textContent = 'Medium password';
+            } else {
+                bar.style.width = '100%';
+                bar.classList.add('strong');
+                text.textContent = 'Strong password!';
+            }
+
+            // Update requirement indicators
+            document.getElementById('req-length').className = password.length >= 8 ? 'valid' : '';
+            document.getElementById('req-upper').className = /[A-Z]/.test(password) ? 'valid' : '';
+            document.getElementById('req-lower').className = /[a-z]/.test(password) ? 'valid' : '';
+            document.getElementById('req-number').className = /[0-9]/.test(password) ? 'valid' : '';
+        }
+
+        function checkPasswordMatch() {
+            const pass = document.getElementById('signupPassword').value;
+            const confirm = document.getElementById('confirmPassword').value;
+            const hint = document.getElementById('matchHint');
+
+            if (confirm && pass !== confirm) {
+                hint.style.display = 'block';
+            } else {
+                hint.style.display = 'none';
+            }
+        }
+
+        function togglePasswordVisibility(inputId, button) {
+            const input = document.getElementById(inputId);
+            const icon = button.querySelector('i');
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
+        function isValidEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+        async function handleGoogleLogin() {
+            showToast('Google signup coming soon!');
+        }
+
+        // Override handleSignup from auth.js to show success message
+        const originalHandleSignup = window.handleSignup;
+        window.handleSignup = async function(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('signupName').value;
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const btn = document.getElementById('signupBtn');
+            const alert = document.getElementById('signupAlert');
+
+            if (password !== confirmPassword) {
+                alert.className = 'alert error';
+                alert.textContent = 'Passwords do not match!';
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating account...';
+
+            try {
+                await account.create(Appwrite.ID.unique(), email, password, name);
+                await account.createEmailPasswordSession(email, password);
+                currentUser = await account.get();
+
+                try {
+                    await databases.createDocument(
+                        CONFIG.databaseId,
+                        CONFIG.usersCollectionId,
+                        currentUser.$id,
+                        {
+                            userId: currentUser.$id,
+                            name: name,
+                            email: email,
+                            avatar: getInitials(name),
+                            isOnline: true,
+                            lastSeen: new Date().toISOString(),
+                            createdAt: new Date().toISOString()
+                        }
+                    );
+                } catch (e) {}
+
+                // Show success state
+                document.getElementById('signupForm').style.display = 'none';
+                document.getElementById('successMessage').style.display = 'block';
+                document.getElementById('divider').style.display = 'none';
+                document.querySelector('.social-login').style.display = 'none';
+                
+                // Update progress to completed
+                document.getElementById('step3').classList.add('active', 'completed');
+
+            } catch (error) {
+                alert.className = 'alert error';
+                alert.textContent = error.message || 'Signup failed. Please try again.';
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-rocket"></i> Create Account';
+            }
+        };
+    </script>
+</body>
+</html>

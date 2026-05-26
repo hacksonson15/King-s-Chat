@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - ChatHub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- ============================================ -->
+    <!-- PROFILE.HTML - User Profile Page              -->
+    <!-- View & edit user profile settings            -->
+    <!-- ============================================ -->
+    
+    <div class="chat-app" id="chatApp">
+        <!-- Header -->
+        <header class="chat-header">
+            <div class="chat-header-left">
+                <a href="chat.html" class="header-btn" title="Back to Chat">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <span class="chat-logo"><i class="fas fa-user-circle"></i> Profile</span>
+            </div>
+
+            <div class="header-actions">
+                <button class="header-btn" onclick="toggleEditMode()" id="editBtn" title="Edit Profile">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <button class="header-btn" onclick="handleLogout()" title="Logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="profile-main">
+            <!-- Profile Header Card -->
+            <section class="profile-header-card">
+                <div class="profile-cover">
+                    <div class="cover-gradient"></div>
+                    <button class="change-cover-btn" onclick="changeCoverPhoto()">
+                        <i class="fas fa-camera"></i> Change Cover
+                    </button>
+                </div>
+                
+                <div class="profile-avatar-section">
+                    <div class="profile-avatar-large" id="profileAvatarLarge">U</div>
+                    <button class="avatar-edit-btn" onclick="changeAvatar()">
+                        <i class="fas fa-camera"></i>
+                    </button>
+                    <div class="online-status-badge" id="profileOnlineStatus">
+                        <span class="status-dot online"></span> Online
+                    </div>
+                </div>
+
+                <div class="profile-name-section">
+                    <h1 id="profileDisplayName">Username</h1>
+                    <p class="profile-username" id="profileHandle">@username</p>
+                    <p class="profile-bio" id="profileBio">Hey there! I'm using ChatHub 🚀</p>
+                </div>
+
+                <div class="profile-stats">
+                    <div class="stat-item">
+                        <strong id="statMessages">0</strong>
+                        <span>Messages</span>
+                    </div>
+                    <div class="stat-item">
+                        <strong id="statContacts">0</strong>
+                        <span>Contacts</span>
+                    </div>
+                    <div class="stat-item">
+                        <strong id="statGroups">0</strong>
+                        <span>Groups</span>
+                    </div>
+                    <div class="stat-item">
+                        <strong id="statDays">0</strong>
+                        <span>Days Active</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Profile Information -->
+            <section class="profile-info-section">
+                <h2 class="section-title"><i class="fas fa-info-circle"></i> About</h2>
+                
+                <div class="info-grid">
+                    <div class="info-item">
+                        <i class="fas fa-envelope"></i>
+                        <div class="info-content">
+                            <label>Email</label>
+                            <span id="profileEmail">email@example.com</span>
+                            <input type="email" id="editEmail" class="edit-input" style="display: none;">
+                        </div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <i class="fas fa-phone"></i>
+                        <div class="info-content">
+                            <label>Phone</label>
+                            <span id="profilePhone">Not set</span>
+                            <input type="tel" id="editPhone" class="edit-input" style="display: none;" placeholder="Add phone number">
+                        </div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <div class="info-content">
+                            <label>Member Since</label>
+                            <span id="profileJoinDate">-</span>
+                        </div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <i class="fas fa-clock"></i>
+                        <div class="info-content">
+                            <label>Last Seen</label>
+                            <span id="profileLastSeen">Just now</span>
+                        </div>
+                    </div>
+                    
+                    <div class="info-item full-width">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div class="info-content">
+                            <label>Location</label>
+                            <span id="profileLocation">Not set</span>
+                            <input type="text" id="editLocation" class="edit-input" style="display: none;" placeholder="Add location">
+                        </div>
+                    </div>
+                    
+                    <div class="info-item full-width">
+                        <i class="fas fa-globe"></i>
+                        <div class="info-content">
+                            <label>Website</label>
+                            <span id="profileWebsite">Not set</span>
+                            <input type="url" id="editWebsite" class="edit-input" style="display: none;" placeholder="Add website URL">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Status Message Section -->
+            <section class="profile-status-section">
+                <h2 class="section-title"><i class="fas fa-comment-dots"></i> Status Message</h2>
+                
+                <div class="status-options">
+                    <button class="status-option active" onclick="setStatus('available')">
+                        <span class="status-dot online"></span> Available
+                    </button>
+                    <button class="status-option" onclick="setStatus('busy')">
+                        <span class="status-dot busy"></span> Busy
+                    </button>
+                    <button class="status-option" onclick="setStatus('away')">
+                        <span class="status-dot away"></span> Away
+                    </button>
+                    <button class="status-option" onclick="setStatus('invisible')">
+                        <span class="status-dot offline"></span> Invisible
+                    </button>
+                </div>
+
+                <div class="custom-status">
+                    <input type="text" id="customStatusInput" placeholder="Set a custom status message..." maxlength="100">
+                    <button class="btn-primary btn-small" onclick="saveCustomStatus()">Save</button>
+                </div>
+            </section>
+
+            <!-- Privacy Settings -->
+            <section class="privacy-section">
+                <h2 class="section-title"><i class="fas fa-shield-alt"></i> Privacy Settings</h2>
+                
+                <div class="setting-toggle">
+                    <div class="toggle-info">
+                        <strong>Show Online Status</strong>
+                        <small>Let others see when you're online</small>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="showOnlineToggle" checked onchange="updatePrivacySetting('showOnline', this.checked)">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div class="setting-toggle">
+                    <div class="toggle-info">
+                        <strong>Read Receipts</strong>
+                        <small>Show when you've read messages</small>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="readReceiptsToggle" checked onchange="updatePrivacySetting('readReceipts', this.checked)">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div class="setting-toggle">
+                    <div class="toggle-info">
+                        <strong>Profile Photo Visibility</strong>
+                        <small>Who can see your profile picture</small>
+                    </div>
+                    <select id="photoVisibility" class="select-input" onchange="updatePrivacySetting('photoVisibility', this.value)">
+                        <option value="everyone">Everyone</option>
+                        <option value="contacts">My Contacts Only</option>
+                        <option value="nobody">Nobody</option>
+                    </select>
+                </div>
+
+                <div class="setting-toggle">
+                    <div class="toggle-info">
+                        <strong>Last Seen Visibility</strong>
+                        <small>Who can see your last seen time</small>
+                    </div>
+                    <select id="lastSeenVisibility" class="select-input" onchange="updatePrivacySetting('lastSeenVisibility', this.value)">
+                        <option value="everyone">Everyone</option>
+                        <option value="contacts">My Contacts Only</option>
+                        <option value="nobody">Nobody</option>
+                    </select>
+                </div>
+            </section>
+
+            <!-- Security Section -->
+            <section class="security-section">
+                <h2 class="section-title"><i class="fas fa-lock"></i> Security</h2>
+                
+                <div class="security-actions">
+                    <button class="security-btn" onclick="changePassword()">
+                        <i class="fas fa-key"></i>
+                        <div>
+                            <strong>Change Password</strong>
+                            <small>Update your account password</small>
+                        </div>
+                    </button>
+                    
+                    <button class="security-btn" onclick="enableTwoFactor()">
+                        <i class="fas fa-shield-alt"></i>
+                        <div>
+                            <strong>Two-Factor Authentication</strong>
+                            <small>Add extra security to your account</small>
+                        </div>
+                    </button>
+                    
+                    <button class="security-btn danger" onclick="viewActiveSessions()">
+                        <i class="fas fa-laptop"></i>
+                        <div>
+                            <strong>Active Sessions</strong>
+                            <small>Manage your logged-in devices</small>
+                        </div>
+                    </button>
+                    
+                    <button class="security-btn danger" onclick="deleteAccount()">
+                        <i class="fas fa-trash-alt"></i>
+                        <div>
+                            <strong>Delete Account</strong>
+                            <small>Permanently delete your account and data</small>
+                        </div>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Action Buttons -->
+            <section class="profile-actions">
+                <button class="btn-primary btn-large" id="saveProfileBtn" style="display: none;" onclick="saveProfileChanges()">
+                    <i class="fas fa-save"></i> Save Changes
+                </button>
+                <a href="chat.html" class="btn-secondary btn-large">
+                    <i class="fas fa-arrow-left"></i> Back to Chat
+                </a>
+            </section>
+        </main>
+    </div>
+
+    <!-- Change Password Modal -->
+    <div class="modal-overlay" id="passwordModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2><i class="fas fa-key"></i> Change Password</h2>
+                <button class="modal-close" onclick="closePasswordModal()">&times;</button>
+            </div>
+            
+            <form onsubmit="handlePasswordChange(event)">
+                <div class="form-group">
+                    <label>Current Password</label>
+                    <input type="password" id="currentPassword" required>
+                </div>
+                <div class="form-group">
+                    <label>New Password</label>
+                    <input type="password" id="newPassword" required minlength="8">
+                </div>
+                <div class="form-group">
+                    <label>Confirm New Password</label>
+                    <input type="password" id="confirmNewPassword" required>
+                </div>
+                <button type="submit" class="btn-primary">Update Password</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Avatar Upload Modal -->
+    <div class="modal-overlay" id="avatarModal">
+        <div class="modal modal-small">
+            <div class="modal-header">
+                <h2><i class="fas fa-camera"></i> Change Avatar</h2>
+                <button class="modal-close" onclick="closeAvatarModal()">&times;</button>
+            </div>
+            
+            <div class="avatar-options">
+                <div class="avatar-preview-large" id="avatarPreview">U</div>
+                
+                <div class="avatar-upload-options">
+                    <label class="upload-option">
+                        <i class="fas fa-upload"></i>
+                        <span>Upload Image</span>
+                        <input type="file" accept="image/*" onchange="previewAvatar(this)" hidden>
+                    </label>
+                    <button class="upload-option" onclick="generateRandomAvatar()">
+                        <i class="fas fa-random"></i>
+                        <span>Generate Random</span>
+                    </button>
+                    <button class="upload-option" onclick="removeAvatar()">
+                        <i class="fas fa-times"></i>
+                        <span>Remove Photo</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <!-- Appwrite SDK -->
+    <script src="https://cdn.appwrite.io/sdk/v2/client.js"></script>
+    
+    <!-- Core Configuration -->
+    <script src="config.js"></script>
+    
+    <!-- Auth Functions -->
+    <script src="auth.js"></script>
+
+    <script>
+        // Profile Page Logic
+        let editMode = false;
+        let profileData = null;
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await checkSession();
+            
+            if (currentUser) {
+                showChatApp(currentUser);
+                await loadProfileData();
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+
+        async function loadProfileData() {
+            try {
+                // Load user profile from database
+                const response = await databases.getDocument(
+                    CONFIG.databaseId,
+                    CONFIG.usersCollectionId,
+                    currentUser.$id
+                );
+                
+                profileData = response;
+                updateProfileUI(response);
+                
+            } catch (error) {
+                console.log('Using session data for profile');
+                updateProfileUI(currentUser);
+            }
+        }
+
+        function updateProfileUI(data) {
+            const name = data.name || currentUser?.name || 'User';
+            const email = data.email || currentUser?.email || '';
+            const initials = getInitials(name);
+
+            // Update avatar
+            document.getElementById('profileAvatarLarge').textContent = initials;
+            document.getElementById('currentUserAvatar').textContent = initials;
+
+            // Update name and handle
+            document.getElementById('profileDisplayName').textContent = name;
+            document.getElementById('profileHandle').textContent = '@' + (name.toLowerCase().replace(/\s+/g, ''));
+            document.getElementById('currentUserName').textContent = name;
+
+            // Update info fields
+            document.getElementById('profileEmail').textContent = email;
+            document.getElementById('editEmail').value = email;
+
+            // Update dates
+            if (data.$createdAt || currentUser?.$createdAt) {
+                const joinDate = new Date(data.$createdAt || currentUser.$createdAt);
+                document.getElementById('profileJoinDate').textContent = joinDate.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+            }
+
+            if (data.lastSeen) {
+                document.getElementById('profileLastSeen').textContent = formatTime(data.lastSeen);
+            }
+
+            // Calculate stats (mock for now)
+            calculateStats(data.$createdAt || currentUser?.$createdAt);
+
+            // Load custom status if exists
+            if (data.statusMessage) {
+                document.getElementById('customStatusInput').value = data.statusMessage;
+            }
+        }
+
+        function calculateStats(joinDateStr) {
+            const joinDate = new Date(joinDateStr);
+            const now = new Date();
+            const daysDiff = Math.floor((now - joinDate) / (1000 * 60 * 60 * 24));
+            
+            document.getElementById('statDays').textContent = daysDiff || 1;
+            // Other stats would come from actual database queries
+        }
+
+        function toggleEditMode() {
+            editMode = !editMode;
+            const btn = document.getElementById('editBtn');
+            const saveBtn = document.getElementById('saveProfileBtn');
+
+            if (editMode) {
+                btn.innerHTML = '<i class="fas fa-times"></i>';
+                btn.title = 'Cancel Editing';
+                saveBtn.style.display = 'inline-flex';
+
+                // Show edit inputs
+                document.querySelectorAll('.edit-input').forEach(input => {
+                    input.style.display = 'block';
+                    input.previousElementSibling.style.display = 'none';
+                });
+            } else {
+                btn.innerHTML = '<i class="fas fa-edit"></i>';
+                btn.title = 'Edit Profile';
+                saveBtn.style.display = 'none';
+
+                // Hide edit inputs
+                document.querySelectorAll('.edit-input').forEach(input => {
+                    input.style.display = 'none';
+                    input.previousElementSibling.style.display = 'inline';
+                });
+            }
+        }
+
+        async function saveProfileChanges() {
+            try {
+                const updatedData = {
+                    name: document.getElementById('editEmail')?.value ? 
+                           (document.getElementById('editName')?.value || currentUser.name) : currentUser.name,
+                    email: document.getElementById('editEmail')?.value || currentUser.email,
+                    phone: document.getElementById('editPhone')?.value || '',
+                    location: document.getElementById('editLocation')?.value || '',
+                    website: document.getElementById('editWebsite')?.value || ''
+                };
+
+                await databases.updateDocument(
+                    CONFIG.databaseId,
+                    CONFIG.usersCollectionId,
+                    currentUser.$id,
+                    updatedData
+                );
+
+                showToast('✅ Profile updated successfully!');
+                toggleEditMode();
+                await loadProfileData();
+
+            } catch (error) {
+                showToast('❌ Error updating profile: ' + error.message);
+            }
+        }
+
+        function setStatus(status) {
+            document.querySelectorAll('.status-option').forEach(btn => btn.classList.remove('active'));
+            event.target.closest('.status-option').classList.add('active');
+            
+            const statusMap = {
+                'available': { color: 'online', text: 'Available' },
+                'busy': { color: 'busy', text: 'Busy' },
+                'away': { color: 'away', text: 'Away' },
+                'invisible': { color: 'offline', text: 'Invisible' }
+            };
+
+            const badge = document.getElementById('profileOnlineStatus');
+            badge.innerHTML = `<span class="status-dot ${statusMap[status].color}"></span> ${statusMap[status].text}`;
+            
+            showToast(`Status: ${statusMap[status].text}`);
+        }
+
+        async function saveCustomStatus() {
+            const status = document.getElementById('customStatusInput').value;
+            
+            try {
+                await databases.updateDocument(
+                    CONFIG.databaseId,
+                    CONFIG.usersCollectionId,
+                    currentUser.$id,
+                    { statusMessage: status }
+                );
+                showToast('✅ Status saved!');
+            } catch (error) {
+                showToast('Error saving status');
+            }
+        }
+
+        function updatePrivacySetting(setting, value) {
+            console.log(`Updating ${setting} to:`, value);
+            showToast(`${setting} updated!`);
+        }
+
+        function changePassword() {
+            document.getElementById('passwordModal').style.display = 'flex';
+        }
+
+        function closePasswordModal() {
+            document.getElementById('passwordModal').style.display = 'none';
+        }
+
+        async function handlePasswordChange(event) {
+            event.preventDefault();
+            showToast('Password change feature requires server-side implementation');
+            closePasswordModal();
+        }
+
+        function enableTwoFactor() {
+            showToast('🔐 Two-factor authentication coming soon!');
+        }
+
+        function viewActiveSessions() {
+            showToast('💻 Session management coming soon!');
+        }
+
+        function deleteAccount() {
+            if (confirm('⚠️ Are you sure you want to delete your account? This action cannot be undone!')) {
+                if (confirm('This will permanently delete all your data. Type DELETE to confirm.')) {
+                    showToast('Account deletion requires additional confirmation');
+                }
+            }
+        }
+
+        function changeCoverPhoto() {
+            showToast('🖼️ Cover photo upload coming soon!');
+        }
+
+        function changeAvatar() {
+            document.getElementById('avatarModal').style.display = 'flex';
+        }
+
+        function closeAvatarModal() {
+            document.getElementById('avatarModal').style.display = 'none';
+        }
+
+        function previewAvatar(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    // For now, just show a preview concept
+                    document.getElementById('avatarPreview').innerHTML = 
+                        `<img src="${e.target.result}" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover;">`;
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function generateRandomAvatar() {
+            const colors = ['#667eea', '#764ba2', '#f093fb', '#f5576c', '#4facfe', '#00f2fe', '#43e97b', '#38f9d7'];
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            document.getElementById('avatarPreview').style.background = randomColor;
+            document.getElementById('avatarPreview').textContent = getInitials(currentUser.name);
+            showToast('Random avatar generated!');
+        }
+
+        function removeAvatar() {
+            document.getElementById('avatarPreview').style.background = 'linear-gradient(135deg, #667eea, #764ba2)';
+            document.getElementById('avatarPreview').textContent = getInitials(currentUser.name);
+            showToast('Avatar removed');
+        }
+
+        // Close modals on outside click
+        document.querySelectorAll('.modal-overlay').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
