@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>King's Chat</title>
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Appwrite Web SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/appwrite@13.0.1"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: #f4f5f7;
+      color: #333;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Helper Class */
+    .hidden {
+      display: none !important;
+    }
+
+    /* ---------------- 1. AUTH SCREEN ---------------- */
+    #auth-screen {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+      background: #f0f2f5;
+    }
+
+    .auth-box {
+      background: #ffffff;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 380px;
+    }
+
+    .auth-box h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #31a8f6;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 500;
+      font-size: 14px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      outline: none;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px;
+      background-color: #31a8f6;
+      border: none;
+      color: white;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .btn:hover {
+      background-color: #1a8ce0;
+    }
+
+    .toggle-auth {
+      text-align: center;
+      margin-top: 15px;
+      font-size: 14px;
+    }
+
+    .toggle-auth a {
+      color: #31a8f6;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    /* ---------------- 2. MAIN DASHBOARD SCREEN (SCREENSHOT UI) ---------------- */
+    #main-screen {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      background-color: #f0f2f5;
+    }
+
+    /* Top Navigation Header */
+    .top-header {
+      background-color: #ffffff;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .icon-btn {
+      background: none;
+      border: none;
+      font-size: 20px;
+      color: #555;
+      cursor: pointer;
+    }
+
+    .room-toggle-container {
+      display: flex;
+      background-color: #e3f2fd;
+      border: 1px solid #31a8f6;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .toggle-btn {
+      padding: 6px 18px;
+      border: none;
+      background: transparent;
+      color: #31a8f6;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .toggle-btn.active {
+      background-color: #31a8f6;
+      color: #ffffff;
+    }
+
+    /* Main Content Blocks */
+    .main-content {
+      flex: 1;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      overflow-y: auto;
+    }
+
+    .content-box {
+      background-color: #e2e2e2;
+      flex: 1;
+      border-radius: 6px;
+    }
+
+    /* Bottom Navigation Bar */
+    .bottom-nav {
+      background-color: #ffffff;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 8px 0;
+      border-top: 1px solid #e0e0e0;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: #757575;
+      text-decoration: none;
+      font-size: 10px;
+      font-weight: bold;
+      gap: 3px;
+      cursor: pointer;
+    }
+
+    .nav-item i {
+      font-size: 18px;
+    }
+
+    .nav-item.active {
+      color: #31a8f6;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Screen 1: Login / Sign Up Page -->
+  <div id="auth-screen">
+    <div class="auth-box">
+      <h2 id="auth-title">King's Chat</h2>
+      <form id="auth-form">
+        <div class="form-group" id="name-group" style="display: none;">
+          <label>Name</label>
+          <input type="text" id="user-name" placeholder="Enter full name">
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="user-email" placeholder="Enter your email" required>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="user-password" placeholder="Enter password" required>
+        </div>
+        <button type="submit" class="btn" id="submit-btn">Login</button>
+      </form>
+      <div class="toggle-auth">
+        <span id="toggle-text">Account nahi hai?</span> 
+        <a href="#" id="toggle-link" onclick="toggleAuthMode(event)">Sign Up karo</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Screen 2: Pic jesa Main Page (Shows AFTER Login) -->
+  <div id="main-screen" class="hidden">
+    <!-- Top Bar -->
+    <div class="top-header">
+      <button class="icon-btn" title="Logout" onclick="logout()"><i class="fa-solid fa-bars"></i></button>
+      
+      <div class="room-toggle-container">
+        <button class="toggle-btn active" onclick="switchRoomTab(this)">All Rooms</button>
+        <button class="toggle-btn" onclick="switchRoomTab(this)">My Rooms</button>
+      </div>
+      
+      <button class="icon-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
+    </div>
+
+    <!-- Center Cards Area -->
+    <div class="main-content">
+      <div class="content-box"></div>
+      <div class="content-box"></div>
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <div class="bottom-nav">
+      <div class="nav-item">
+        <i class="fa-solid fa-fire"></i>
+        <span>MEMES</span>
+      </div>
+      <div class="nav-item active">
+        <i class="fa-solid fa-house"></i>
+        <span>ROOMS</span>
+      </div>
+      <div class="nav-item">
+        <i class="fa-solid fa-comment-dots"></i>
+        <span>MESSAGES</span>
+      </div>
+      <div class="nav-item">
+        <i class="fa-solid fa-user-group"></i>
+        <span>PEOPLE</span>
+      </div>
+      <div class="nav-item">
+        <i class="fa-solid fa-border-all"></i>
+        <span>APPS</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Appwrite Credentials Configuration
+    const { Client, Account, ID } = Appwrite;
+    const client = new Client();
+
+    client
+      .setEndpoint('https://fra.cloud.appwrite.io/v1')
+      .setProject('6a73ef7f00277f072819');
+
+    const account = new Account(client);
+    let isSignUpMode = false;
+
+    // Check if user is already logged in on page load
+    window.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const user = await account.get();
+        if (user) {
+          openMainPage();
+        }
+      } catch (err) {
+        openAuthPage();
+      }
+    });
+
+    // Handle Form Submit (Appwrite Login & Sign Up)
+    document.getElementById('auth-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('user-email').value;
+      const password = document.getElementById('user-password').value;
+
+      try {
+        if (isSignUpMode) {
+          const name = document.getElementById('user-name').value;
+          // Create User
+          await account.create(ID.unique(), email, password, name);
+          // Login User session after creation
+          await account.createEmailPasswordSession(email, password);
+        } else {
+          // Login existing User session
+          await account.createEmailPasswordSession(email, password);
+        }
+        openMainPage();
+      } catch (error) {
+        alert("Appwrite Error: " + error.message);
+      }
+    });
+
+    // Switch between Login and Sign Up UI
+    function toggleAuthMode(e) {
+      e.preventDefault();
+      isSignUpMode = !isSignUpMode;
+      
+      const title = document.getElementById('auth-title');
+      const submitBtn = document.getElementById('submit-btn');
+      const nameGroup = document.getElementById('name-group');
+      const toggleText = document.getElementById('toggle-text');
+      const toggleLink = document.getElementById('toggle-link');
+
+      if (isSignUpMode) {
+        title.innerText = "King's Chat Sign Up";
+        submitBtn.innerText = "Sign Up";
+        nameGroup.style.display = "block";
+        toggleText.innerText = "Pehle se account hai?";
+        toggleLink.innerText = "Login karo";
+      } else {
+        title.innerText = "King's Chat Login";
+        submitBtn.innerText = "Login";
+        nameGroup.style.display = "none";
+        toggleText.innerText = "Account nahi hai?";
+        toggleLink.innerText = "Sign Up karo";
+      }
+    }
+
+    // Toggle Screen Display Functions
+    function openMainPage() {
+      document.getElementById('auth-screen').classList.add('hidden');
+      document.getElementById('main-screen').classList.remove('hidden');
+    }
+
+    function openAuthPage() {
+      document.getElementById('auth-screen').classList.remove('hidden');
+      document.getElementById('main-screen').classList.add('hidden');
+    }
+
+    // Logout Functionality (Top menu icon)
+    async function logout() {
+      try {
+        await account.deleteSession('current');
+        openAuthPage();
+      } catch (error) {
+        alert("Logout Error: " + error.message);
+      }
+    }
+
+    // Toggle All Rooms / My Rooms Buttons
+    function switchRoomTab(btn) {
+      document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+  </script>
+</body>
+</html>
